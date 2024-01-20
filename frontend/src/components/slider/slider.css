@@ -51,9 +51,27 @@
   box-sizing: border-box;
   width: 98%;
   border: 1px solid #ccc;
+  background: linear-gradient(#131219, #131219) padding-box, linear-gradient(
+        var(--angle),
+        #070707,
+        #687aff
+      ) border-box;
+  animation: 8s rotate linear infinite;
   padding: 10px 10px 10px 10px;
   scrollbar-color: black, white;
 }
+
+@keyframes rotate {
+    to {
+      --angle: 360deg;
+    }
+  }
+  
+  @property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+  }
 
 .friend-image {
   width: 50px;
@@ -91,3 +109,4 @@
 .search-bar input:focus {
   outline: none;
 }
+

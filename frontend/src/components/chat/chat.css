@@ -17,6 +17,7 @@
 }
 
 .header {
+    margin: 10px;
     font-size: 40px;
     letter-spacing: 2px;
     font-family: 'InvisibleEB', sans-serif;
@@ -209,5 +210,19 @@
     -webkit-text-fill-color: transparent;
     background-size: 500% auto;
     animation: textShine 5s ease-in-out infinite alternate;
+  }
+
+.chat-header {
+  display: flex;
+  align-items: center; /* Aligns items vertically in the center */
+  gap: 10px; /* Optional: Adds some space between the image and the header */
+  border-color: #66B2FF;
+  border-bottom: 2px solid #ccc; /* Adds a border only to the bottom */
+}
+
+.friend-image {
+  width: 50px; /* Adjust as needed */
+  height: 50px; /* Adjust as needed */
+  border-radius: 50%; /* Makes the image circular */
 }
 

@@ -43,7 +43,10 @@ interface ChatProps {
 const Chat: React.FC<ChatProps> = ({ messages, receiverId }) => {
   return (
     <div className="chat">
-      <h1 className="header"> {friends[receiverId].name } </h1>
+      <div className="chat-header">
+        <img className="friend-image" src={`https://i.pravatar.cc/150?img=${receiverId}`} alt={friends[receiverId].name} />
+        <h1 className="header"> {friends[receiverId].name } </h1>
+      </div> 
       <div className="chat-messages">
         {messages.map((message) => (
           <div key={message.messageId} className={`message ${message.isSenderYou ? "sent" : "received"}`}>

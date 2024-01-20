@@ -46,7 +46,7 @@ const Slider: React.FC<SliderProps> = ({ onFriendClick }) => {
           />
         </div>
         {filteredFriends.map(friend => (
-          <div key={friend.id} className="friend-item" onClick={() => onFriendClick(friend.id)}>
+          <div key={friend.id} className=" friend-item" onClick={() => onFriendClick(friend.id)}>
             <img className="friend-image" src={`https://i.pravatar.cc/150?img=${friend.id}`} alt={friend.name} />
             <p>{friend.name}</p>
           </div>
