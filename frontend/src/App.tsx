@@ -21,7 +21,9 @@ function App() {
       <Grid item xs={4}>
         <Slider />
       </Grid>
-      <Grid item xs={8} style={{ backgroundColor: "#0F1B29" }}></Grid>
+      <Grid item xs={8} style={{ backgroundColor: "#0F1B29" }}>
+        <Chat />
+      </Grid>
     </Grid>
   );
 }
