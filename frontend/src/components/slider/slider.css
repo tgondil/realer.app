@@ -1,0 +1,28 @@
+.scrollable-section {
+    display: flex;
+    scroll-behavior: smooth;
+    height: 100vh;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px 0;
+    margin: 0 10px;
+    width: 100%;
+    align-items: flex-start;
+    gap: 10px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+
+.friend-item {
+    background-color: #1f1f1f;
+    width: 95%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    cursor: pointer;
+    color: white;
+}
