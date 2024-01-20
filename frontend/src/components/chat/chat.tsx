@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import "./chat.css";
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import { Slider } from '@mui/material';
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import { Slider } from "@mui/material";
 
 const Chat = () => {
   return (
