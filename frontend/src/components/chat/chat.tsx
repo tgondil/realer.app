@@ -6,9 +6,12 @@ import { Slider } from "@mui/material";
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import MicNoneIcon from '@mui/icons-material/MicNone';
+import Default from "./default";
+import DefaultScreen from "./default";
 
 const Chat = () => {
   return (
+    <><DefaultScreen></DefaultScreen>
     <Grid className="body" style={{background: "#090979"}} container spacing={2}>
     <Grid item xs={1}> <InsertEmoticonIcon style={{ fontSize: 40, paddingTop: "7px" }}/> <AddCircleOutlineIcon style={{ fontSize: 40, paddingTop: "7px" }}/> </Grid>
     <Grid item xs={10}> 
@@ -28,7 +31,8 @@ const Chat = () => {
     </Grid>
 {/* sick, mui has a search bar component alr ill check it ou */}
         
-      </Grid>
+      </Grid></>
+    
   );
 };
 

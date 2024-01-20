@@ -1,10 +1,15 @@
+.container {
+  margin: 10px;  
+  width: auto;
+}
+
 .scrollable-section {
   display: flex;
   height: 100vh;
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 10px 0px 0px 0px;
+  padding: 20px 0px 0px 0px;
   width: 100%;
   align-items: flex-start;
   gap: 10px;
@@ -38,22 +43,17 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  padding: 10px;
+  padding-top: 10px;
+  width: 92%;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-.search-bar.input {
+.search-bar input {
   width: 100%;
-  padding: 10px;
+  padding: 10px 10px 10px 10px;
   border-radius: 10px;
+  flex-direction: start;
   border: 1px solid #ccc;
   background-color: #1f1f1f;
-  color: white;.search-bar.input {
-      width: 100%;
-        padding: 10px;
-          border-radius: 10px;
-            border: 1px solid #ccc;
-              background-color: #1f1f1f;
-                color: white;
-              }
+  color: white;
 }

@@ -51,7 +51,7 @@ const Slider: React.FC = () => {
   const filteredFriends: Friend[] = filterFriends(searchQuery, friends);
 
   return (
-    <>
+    <div className="container">
       <div className="search-bar">
         <input
           type="text"
@@ -60,15 +60,15 @@ const Slider: React.FC = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-    <div className="scrollable-section">
-      {filteredFriends.map(friend => (
-        <div key={friend.id} className="friend-item">
-          <img className="friend-image" src={`https://i.pravatar.cc/150?img=${friend.id}`} alt={friend.name} />
-          <p>{friend.name}</p>
-        </div>
-      ))}
+      <div className="scrollable-section">
+        {filteredFriends.map(friend => (
+          <div key={friend.id} className="friend-item">
+            <img className="friend-image" src={`https://i.pravatar.cc/150?img=${friend.id}`} alt={friend.name} />
+            <p>{friend.name}</p>
+          </div>
+        ))}
+      </div>
     </div>
-    </>
   );
 };
           
