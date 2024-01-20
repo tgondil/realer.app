@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Slider from "./components/slider/slider";
-import Chat from "./components/chat/chat";
+import MessageBar from "./components/messageBar/messageBar";
 //npm install @mui/material @emotion/react @emotion/styled
 
 document.body.style.backgroundColor = "#0B0D0E";
@@ -15,13 +15,13 @@ function App() {
     <Grid
       container
       spacing={2}
-      style={{ backgroundColor: "#0B0D0E", height: "100vh" }}
+      style={{ backgroundColor: "#0F1B29", height: "100vh" }}
     >
       <Grid item xs={4}>
         <Slider />
       </Grid>
       <Grid item xs={8} style={{ backgroundColor: "#0F1B29" }}>
-        <Chat />
+        <MessageBar />
       </Grid>
     </Grid>
   );

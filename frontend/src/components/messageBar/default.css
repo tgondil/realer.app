@@ -21,9 +21,8 @@ h1 {
 }
 
 .hero {
-    justify-content: center;
-    display: flex;
-    font-size: 50px;
+
+    font-size: 70px;
     letter-spacing: 2px;
     font-family: 'InvisibleEB', sans-serif;
 }
@@ -41,7 +40,7 @@ h1 {
 }
 
 .big {
-    font-size: 80px;
+    font-size: 120px;
     font-family: NexaEB, sans-serif;
     letter-spacing: 3px;
 }
@@ -53,4 +52,8 @@ h1 {
     100% {
         background-position: 100% 50%;
     }
+}
+
+.new-line {
+    white-space: pre-line;
 }

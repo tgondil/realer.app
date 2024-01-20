@@ -1,10 +1,12 @@
 .container {
   padding: 10px 0px 10px 10px;
+  margin-left: 10px;
   width: auto;
   overflow: hidden;
   scroll-behavior: smooth;
   height: 100vh;
-  background-color: black;
+  background-color: #0F1B29;
+  scrollbar-color: black, white;
 }
 
 .scrollable-section {
@@ -17,12 +19,11 @@
   height: 100vh;
   align-items: flex-start;
   gap: 10px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
-  scrollbar-color: #1f1f1f black;
+  scrollbar-color: black, white;
 }
 
 .friend-item {
-  background-color: #1f1f1f;
+  background-color: #0F1B29;
   border-radius: 10px;
   display: flex;
   flex-direction: start;
@@ -31,10 +32,10 @@
   color: white;
 
   box-sizing: border-box;
-  width: 95%;
+  width: 98%;
   border: 1px solid #ccc;
-  margin: 0px 10px 0px 10px;
   padding: 10px 10px 10px 10px;
+  scrollbar-color: black, white;
 }
 
 .friend-image {
@@ -42,29 +43,32 @@
   height: 50px;
   border-radius: 50%;
   margin: 0px 10px 0px 10px;
+  scrollbar-color: black, white;
 }
 
 .search-bar {
   position: sticky;
   top: 0;
   z-index: 100;
-  width: 100%;
-  background-color: #1f1f1f;
+  width: 90%;
+  background-color: #0F1B29;
   border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  margin-left: 10px;
+  scrollbar-color: black, white;
 }
 
 .search-bar input {
-  width: 95%;
+  width: 100%;
   padding: 20px 10px 20px 10px;
   border-radius: 10px;
   flex-direction: start;
   border: 1px solid #ccc;
-  background-color: #1f1f1f;
+  background-color: #0F1B29;
   color: white;
   text-align: center;
   align-items: center;
   justify-content: center;
+  scrollbar-color: black, white;
 }
 
 .search-bar input:focus {
