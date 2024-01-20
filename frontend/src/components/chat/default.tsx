@@ -8,8 +8,13 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import MicNoneIcon from '@mui/icons-material/MicNone';
 
 const DefaultScreen = () => {
-    return (<><h1 className="hero gradient"> Texting has never been </h1>
-    <h1 className="hero big gradient"> easier. </h1></>
+    return (<>
+    <div style={{height: "90vh", display: "flex", alignItems: "center", justifyContent: "center", }}>
+    <h1 className="hero" style={{paddingTop: "20px"}}> Talking to your friends has never been <br></br></h1>
+    
+    <h1 className="hero big gradient" style={{width: "22%", paddingLeft: '0'}} > realer. </h1>
+    </div>
+    </>
         
         // <h2> HERPES </h2> yapping is wild fr
     );

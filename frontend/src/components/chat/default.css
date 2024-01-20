@@ -21,8 +21,6 @@ h1 {
 }
 
 .hero {
-    padding-top: 20px;
-    padding-bottom: 60px;
     justify-content: center;
     display: flex;
     font-size: 50px;
@@ -43,7 +41,9 @@ h1 {
 }
 
 .big {
-    font-size: 70px;
+    font-size: 80px;
+    font-family: NexaEB, sans-serif;
+    letter-spacing: 3px;
 }
 
 @keyframes textShine {

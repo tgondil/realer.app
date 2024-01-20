@@ -1,3 +1,5 @@
+
+
 .css-1476h24 {
     background-color: aliceblue;
 }
@@ -49,4 +51,69 @@
     margin-left: 0px;
     vertical-align: bottom;
     /*border-radius: 100px;*/
+}
+
+/*This is for the chat input*/
+.css-1s0nwmf-MuiFormControl-root-MuiTextField-root {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    position: relative;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    width: 100%;
+    vertical-align: top;
+}
+
+
+.css-15eo0ar-MuiFormControl-root-MuiTextField-root {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    position: relative;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    width: 100%;
+    vertical-align: top;
+}
+
+.css-mhc70k-MuiGrid-root {
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    width: 100% !important;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    margin-top: -16px;
+}
+
+.gradient {
+    background: linear-gradient(
+        to right,
+        rgba(0,212,255,1)0%, #B8B5FF 35%, #41AEA9 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 500% auto;
+    animation: textShine 5s ease-in-out infinite alternate;
 }

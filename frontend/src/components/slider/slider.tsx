@@ -52,6 +52,7 @@ const Slider: React.FC = () => {
 
   return (
     <div className="container">
+      <div className="scrollable-section">
       <div className="search-bar">
         <input
           type="text"
@@ -60,7 +61,6 @@ const Slider: React.FC = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-      <div className="scrollable-section">
         {filteredFriends.map(friend => (
           <div key={friend.id} className="friend-item">
             <img className="friend-image" src={`https://i.pravatar.cc/150?img=${friend.id}`} alt={friend.name} />
