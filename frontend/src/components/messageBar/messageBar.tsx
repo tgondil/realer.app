@@ -42,7 +42,7 @@ const MessageBar = () => {
           paddingRight: "0",
           margin: "10px",
           background: "white",
-          borderRadius: "50px",
+          borderRadius: "50px 50px 0px 0px",
           width: "100%",
         }}
         className="bar"

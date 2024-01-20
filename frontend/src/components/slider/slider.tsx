@@ -4,46 +4,29 @@ import { useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import TextField from "@mui/material/TextField";
+import TopBar from './topBar';
 
 import "./slider.css";
+import { friends } from '../../dummy_data/users'; // Assuming friendsMap is imported from your data file
 
 interface Friend {
-  id: number;
-  name: string;
+    id: number;
+    name: string;
 }
 
-const friends: Friend[] = [
-      { id: 1, name: 'Timothy Edwards' },
-      { id: 2, name: 'Mikayla Brown' },
-      { id: 3, name: 'Tiffany Calhoun' },
-      { id: 4, name: 'Patrick Jones' },
-      { id: 5, name: 'Sara Good' },
-      { id: 6, name: 'Rachel Becker' },
-      { id: 7, name: 'Mrs. Brianna Adams' },
-      { id: 8, name: 'Michael Williamson' },
-      { id: 9, name: 'William Gray' },
-      { id: 10, name: 'Mrs. Ashley Lucas MD' },
-      { id: 11, name: 'Christine Morales' },
-      { id: 12, name: 'Melissa Smith' },
-      { id: 13, name: 'Tyler Horton' },
-      { id: 14, name: 'Noah Mccormick' },
-      { id: 15, name: 'Alicia Ferrell' },
-      { id: 16, name: 'Rose Cruz' },
-      { id: 17, name: 'Catherine Camacho' },
-      { id: 18, name: 'Megan Jones' },
-      { id: 19, name: 'Bradley Ward' },
-      { id: 20, name: 'Michael Smith' },
-];
+interface SliderProps {
+  onFriendClick: (id: number) => void;
+}
 
-
-const Slider: React.FC = () => {
+const Slider: React.FC<SliderProps> = ({ onFriendClick }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filterFriends = (query: string, friends: Friend[]): Friend[] => {
+  const filterFriends = (query: string, friendsMap: Record<number, Friend>): Friend[] => {
+    const friendsArray = Object.values(friendsMap); // Convert map to array
     if (!query) {
-      return friends;
+      return friendsArray;
     }
-    return friends.filter(friend =>
+    return friendsArray.filter(friend =>
       friend.name.toLowerCase().includes(query.toLowerCase())
     );
   };
@@ -53,6 +36,7 @@ const Slider: React.FC = () => {
   return (
     <div className="container">
       <div className="scrollable-section">
+        <TopBar />
         <div className="search-bar">
           <input
             type="text"
@@ -61,16 +45,15 @@ const Slider: React.FC = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-          {filteredFriends.map(friend => (
-            <div key={friend.id} className="friend-item">
-              <img className="friend-image" src={`https://i.pravatar.cc/150?img=${friend.id}`} alt={friend.name} />
-              <p>{friend.name}</p>
-            </div>
-          ))}
-        </div>
+        {filteredFriends.map(friend => (
+          <div key={friend.id} className="friend-item" onClick={() => onFriendClick(friend.id)}>
+            <img className="friend-image" src={`https://i.pravatar.cc/150?img=${friend.id}`} alt={friend.name} />
+            <p>{friend.name}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
           
-
 export default Slider;
