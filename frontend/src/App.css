@@ -6,4 +6,8 @@
   overflow: hidden;
 }
 
+.css-mhc70k-MuiGrid-root>.MuiGrid-item {
+  padding-left: 0 !important;
+}
+
 
