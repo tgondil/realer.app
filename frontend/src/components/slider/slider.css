@@ -5,17 +5,14 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 10px 0px 0px 0px;
-  margin: 0px -10px 0px 10px;
   width: 100%;
   align-items: flex-start;
   gap: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
-  z-index: 1;
 }
 
 .friend-item {
   background-color: #1f1f1f;
-  padding: 10px 10px 10px 10px;
   border-radius: 10px;
   display: flex;
   flex-direction: start;
@@ -26,5 +23,37 @@
   box-sizing: border-box;
   width: 95%;
   border: 1px solid #ccc;
-  margin: 0px 10px 0px 20px;
+  margin: 0px 10px 0px 10px;
+  padding: 10px 10px 10px 10px;
+}
+
+.friend-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 0px 10px 0px 10px;
+}
+
+.search-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.search-bar.input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #1f1f1f;
+  color: white;.search-bar.input {
+      width: 100%;
+        padding: 10px;
+          border-radius: 10px;
+            border: 1px solid #ccc;
+              background-color: #1f1f1f;
+                color: white;
+              }
 }

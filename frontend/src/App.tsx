@@ -13,7 +13,6 @@ document.body.style.backgroundColor = "#0B0D0E";
 function App() {
   return (
     <Grid
-      className="body"
       container
       spacing={2}
       style={{ backgroundColor: "#0B0D0E", height: "100vh" }}
