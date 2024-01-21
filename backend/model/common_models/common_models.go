@@ -1,5 +1,7 @@
 package common_models
 
+import "backend/utilities/appjson"
+
 type SocketAndResponseModel struct {
 	ToPersonID             int64             `json:"toPerson"`
 	FromPersonID           int64             `json:"fromPerson"`
@@ -33,8 +35,22 @@ type MessageDBModel struct {
 }
 
 type ChatDBModel struct {
-	ChatID int64 `json:"chatID"`
-	PersonDBModel
+	ChatID     int64  `redis:"chatID"`
+	PersonID   int64  `redis:"personID"`
+	PersonName string `redis:"personName"`
+}
+
+func (c *ChatDBModel) MarshalBinary() (data []byte, err error) {
+	data, err = appjson.Marshal(struct {
+		ChatID     int64  `json:"chatID"`
+		PersonID   int64  `json:"personID"`
+		PersonName string `json:"personName"`
+	}{
+		ChatID:     c.ChatID,
+		PersonID:   c.PersonID,
+		PersonName: c.PersonName,
+	})
+	return data, err
 }
 
 type PersonDBModel struct {

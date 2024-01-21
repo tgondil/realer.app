@@ -13,7 +13,7 @@ export const signup = async (name: string, password: string) => {
     }
 
     const data = await response.json();
-    return data; // contains token or user details
+    return data.token;
   } catch (error) {
     console.error("Login error:", error);
     throw error;

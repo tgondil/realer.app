@@ -51,7 +51,7 @@ func Init() {
 	app.Group(func(r chi.Router) {
 		r.Use(appmiddleware.AuthMiddleware)
 		r.Get("/users", CustomHandler(request_handler.GetUsers))
-		r.Get("/user/{userID}", CustomHandler(request_handler.GetUsers))
+		r.Get("/user/{userID}", CustomHandler(request_handler.GetUser))
 		r.Get("/chatMessages/{otherPersonID}", CustomHandler(request_handler.GetSingleChatMessages))
 		r.Get("/chats", CustomHandler(request_handler.GetChats))
 		r.Post("/sendMessageWithFile", CustomHandler(request_handler.SendMessageWithFile))
