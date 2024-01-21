@@ -9,6 +9,7 @@ import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { getChat } from "../../apis/getChat";
 import { getUserName } from "../../apis/getUserName";
+import { sendMessage } from "../../apis/sendMessage";
 
 const CssTextField = styled(TextField)({
   "& label.Mui-focused": {
@@ -37,6 +38,7 @@ interface ChatProps {
 
 const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -69,6 +71,19 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
       fetchUserName();
     }
   }, [token, receiverId]);
+
+  const handleKeyPress = async (event: React.KeyboardEvent) => {
+    if (event.key === "Enter" && newMessage.trim() !== "") {
+      event.preventDefault();
+
+      try {
+        await sendMessage(token, receiverId, newMessage);
+        setNewMessage("");
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
+    }
+  };
 
   return (
     <div className="chat">
@@ -111,7 +126,13 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
           />{" "}
         </Grid>
         <Grid item xs={10} style={{ paddingTop: "0" }}>
-          <CssTextField label="Type a message" id="custom-css-outlined-input" />
+          <CssTextField
+            label="Type a message"
+            id="custom-css-outlined-input"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
         </Grid>
         <Grid item xs={1} style={{ paddingTop: "0" }}>
           <MicNoneIcon
