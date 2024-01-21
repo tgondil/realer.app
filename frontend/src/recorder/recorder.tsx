@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { AudioRecorder } from 'react-audio-voice-recorder';
+import { useForm } from "react-hook-form";
 
 export default function Recorder() {
   const addAudioElement = (blob: Blob) => {
@@ -7,7 +8,19 @@ export default function Recorder() {
     const audio = document.createElement('audio');
     audio.src = url;
     audio.controls = true;
-    document.body.appendChild(audio);
+    onSubmit(audio);
+  };
+
+  const { register, handleSubmit } = useForm();
+
+  const onSubmit = async (data:any) => {
+    const formData = new FormData();
+    formData.append("file", data.file[0]);
+
+    const res = await fetch("http://localhost:5000/upload-file", {
+      method: "POST",
+      body: formData,
+    }).then((res) => res.json());
   };
 
   return (
