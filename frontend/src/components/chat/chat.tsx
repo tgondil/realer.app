@@ -10,6 +10,7 @@ import TextField from "@mui/material/TextField";
 import { getChat } from "../../apis/getChat";
 import { getUserName } from "../../apis/getUserName";
 import { sendMessage } from "../../apis/sendMessage";
+import { useRef } from "react";
 
 const CssTextField = styled(TextField)({
   "& label.Mui-focused": {
@@ -72,6 +73,14 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
     }
   }, [token, receiverId]);
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages]);
+
   const handleKeyPress = async (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && newMessage.trim() !== "") {
       event.preventDefault();
@@ -85,6 +94,8 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
       }
     }
   };
+
+  const messagesEndRef =  React.useRef<HTMLInputElement>(null);
 
   return (
     <div className="chat">
@@ -107,6 +118,7 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
             <p className="font"> {message.content} </p>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
       <Grid
         style={{
