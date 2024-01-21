@@ -4,7 +4,7 @@ export const sendMessage = async (
   messageContent: string,
 ) => {
   try {
-    const response = await fetch("http://localhost:8080/sendMessage", {
+    const response = await fetch("http://44.221.67.84:8080/sendMessage", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
