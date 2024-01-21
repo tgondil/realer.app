@@ -95,7 +95,7 @@ function Camera() {
                 emotions[key] = 0;
               }
             }
-            if (emotions.disgusted > 5) {
+            if (emotions.disgusted > 3) {
               console.log("disgusted");
               emotions.disgusted = 0;
             }
@@ -107,7 +107,7 @@ function Camera() {
                 emotions[key] = 0;
               }
             }
-            if (emotions.surprised > 5) {
+            if (emotions.surprised > 3) {
               console.log("surprised");
               emotions.surprised = 0;
             }
@@ -131,7 +131,7 @@ function Camera() {
                 emotions[key] = 0;
               }
             }
-            if (emotions.angry > 5) {
+            if (emotions.angry > 4) {
               console.log("angry");
               emotions.angry = 0;
             }
@@ -171,7 +171,7 @@ function Camera() {
                 emotions[key] = 0;
               }
             }
-            if (emotions.veryHappy > 5) {
+            if (emotions.veryHappy > 6) {
               console.log("very happy");
               emotions.veryHappy = 0;
             }
@@ -183,7 +183,7 @@ function Camera() {
                 emotions[key] = 0;
               }
             }
-            if (emotions.neutral > 5) {
+            if (emotions.neutral > 10) {
               console.log("neutral");
               emotions.neutral = 0;
             }
