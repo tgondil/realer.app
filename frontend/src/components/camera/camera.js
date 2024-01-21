@@ -39,6 +39,29 @@ function Camera() {
       });
   }
 
+  //create a counter for each emotion and then display the emotion with the highest count
+  var happyCounter = 0;
+  var veryHappyCounter = 0;
+  var sadCounter = 0;
+  var angryCounter = 0;
+  var fearfulCounter = 0;
+  var surprisedCounter = 0;
+  var disgustedCounter = 0;
+  var neutralCounter = 0;
+
+  //create a hashmap of emotions and their counters
+  var emotions = {
+    happy: happyCounter,
+    veryHappy: veryHappyCounter,
+    sad: sadCounter,
+    angry: angryCounter,
+    fearful: fearfulCounter,
+    surprised: surprisedCounter,
+    disgusted: disgustedCounter,
+    neutral: neutralCounter
+  }
+
+
   const handleVideoOnPlay = () => {
     setInterval(async () => {
       if (canvasRef && canvasRef.current) {
@@ -47,6 +70,8 @@ function Camera() {
           width: videoWidth,
           height: videoHeight
         }
+
+        //how to store a counter for each emotion and then display the emotion with the highest count?
 
         faceapi.matchDimensions(canvasRef.current, displaySize);
 
@@ -58,35 +83,110 @@ function Camera() {
         canvasRef && canvasRef.current && faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
         canvasRef && canvasRef.current && faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
         canvasRef && canvasRef.current && faceapi.draw.drawFaceExpressions(canvasRef.current, resizedDetections);
-        //print to console the highest expression
 
         if (resizedDetections[0]) {
           let expressions = resizedDetections[0].expressions;
-
           
           if (expressions.disgusted > 0.3) {
-            console.log("disgusted");
+            emotions.disgusted++;
+            //set all other counters to 0
+            for (var key in emotions) {
+              if (key !== "disgusted") {
+                emotions[key] = 0;
+              }
+            }
+            if (emotions.disgusted > 5) {
+              console.log("disgusted");
+              emotions.disgusted = 0;
+            }
           }
           else if (expressions.surprised > 0.4) {
-            console.log("surprised");
+            emotions.surprised++;
+            for (var key in emotions) {
+              if (key !== "surprised") {
+                emotions[key] = 0;
+              }
+            }
+            if (emotions.surprised > 5) {
+              console.log("surprised");
+              emotions.surprised = 0;
+            }
           }
           else if (expressions.fearful > 0.3) {
-            console.log("fearful");
+            emotions.fearful++;
+            for (var key in emotions) {
+              if (key !== "fearful") {
+                emotions[key] = 0;
+              }
+            }
+            if (emotions.fearful > 5) {
+              console.log("fearful");
+              emotions.fearful = 0;
+            }
           }
           else if (expressions.angry > 0.6) {
-            console.log("angry");
+            emotions.angry++;
+            for (var key in emotions) {
+              if (key !== "angry") {
+                emotions[key] = 0;
+              }
+            }
+            if (emotions.angry > 5) {
+              console.log("angry");
+              emotions.angry = 0;
+            }
           }
           else if (expressions.sad > 0.6) {
-            console.log("sad");
+            emotions.sad++;
+            for (var key in emotions) {
+              if (key !== "sad") {
+                emotions[key] = 0;
+              }
+            }
+            if (emotions.sad > 5) {
+              console.log("sad");
+              emotions.sad = 0;
+            }
           }
-          else if (expressions.happy > 0.7 && expressions.happy < 0.95) {
-            console.log("happy");
+          else if (expressions.happy > 0.6 && expressions.happy < 0.99) {
+            emotions.happy++;
+            if (emotions.happy > 5) {
+              console.log("happy");
+              emotions.happy = 0;
+              for (var key in emotions) {
+                if (emotions.veryHappy < 5 && emotions.happy > 2) {
+                  console.log("happy");
+                }
+                emotions[key] = 0;
+              
+            }
+            }
+            
+            
           }
-          else if (expressions.happy > 0.95) {
-            console.log("very happy");
+          else if (expressions.happy >= 0.99) {
+            emotions.veryHappy++;
+            for (var key in emotions) {
+              if (key !== "veryHappy") {
+                emotions[key] = 0;
+              }
+            }
+            if (emotions.veryHappy > 5) {
+              console.log("very happy");
+              emotions.veryHappy = 0;
+            }
           }
           else if (expressions.neutral > 0.9) {
-            console.log("neutral");
+            emotions.neutral++;
+            for (var key in emotions) {
+              if (key !== "neutral") {
+                emotions[key] = 0;
+              }
+            }
+            if (emotions.neutral > 5) {
+              console.log("neutral");
+              emotions.neutral = 0;
+            }
           }
 
           //if alternating between happy and very happy, then happy:
