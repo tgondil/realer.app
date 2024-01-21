@@ -18,8 +18,6 @@ import { Message } from "./types/types";
 document.body.style.backgroundColor = "rgb(11, 13, 14)";
 
 function App() {
-  const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
-  const [selectedChat, setSelectedChat] = useState<Message[]>([]);
   const [token, setToken] = useState<string>("");
 
   const onLoginSuccess = (newToken: string) => {

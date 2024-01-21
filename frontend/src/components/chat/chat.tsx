@@ -13,6 +13,7 @@ import InputBase from "@mui/material/InputBase";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
 import { getChat } from "../../apis/getChat";
+import { getUserName } from "../../apis/getUserName";
 
 const CssTextField = styled(TextField)({
   "& label.Mui-focused": {
@@ -45,7 +46,7 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const chatMessages = await getChat(token, receiverId); // Use token in API call
+        const chatMessages = await getChat(token, receiverId);
         setMessages(chatMessages);
       } catch (error) {
         console.error("Error fetching chat messages:", error);
@@ -55,7 +56,24 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
     if (receiverId !== null) {
       fetchMessages();
     }
-  }, [token, receiverId]); // Add token as a dependency
+  }, [token, receiverId]);
+
+  const [userName, setUserName] = useState<string>("");
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const name = await getUserName(token, receiverId);
+        setUserName(name);
+      } catch (error) {
+        console.error("Error fetching user name:", error);
+      }
+    };
+
+    if (receiverId !== null) {
+      fetchUserName();
+    }
+  }, [token, receiverId]);
 
   return (
     <div className="chat">
@@ -65,7 +83,7 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
           src={`https://i.pravatar.cc/150?img=${receiverId}`}
           alt={receiverId.toString()}
         />
-        <h1 className="header"> {receiverId} </h1>
+        <h1 className="header"> {userName} </h1>
       </div>
       <div className="chat-messages">
         {messages.map((message) => (

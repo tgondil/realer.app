@@ -1,7 +1,7 @@
 export const getChat = async (token: string, otherPersonId: number) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/chatMessages/${otherPersonId}`,
+      `http://44.221.67.84:8080/chatMessages/${otherPersonId}`,
       {
         method: "GET",
         headers: {
