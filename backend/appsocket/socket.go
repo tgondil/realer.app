@@ -8,7 +8,6 @@ import (
 	"github.com/zishang520/engine.io/v2/types"
 	"github.com/zishang520/socket.io/v2/socket"
 	"log"
-	"net/http"
 	"strings"
 )
 
@@ -18,12 +17,20 @@ var httpServer *types.HttpServer
 func Init() {
 	const prefix = "Socket"
 
-	httpServer = types.NewWebServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	httpServer = types.NewWebServer(nil)/*http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		origin := r.Header.Get("Origin")
 		w.Header().Set("Access-Control-Allow-Origin", origin)
-	}))
-	io = socket.NewServer(httpServer, nil)
+	})*/
+	options := socket.DefaultServerOptions()
+	options.SetCors(&types.Cors{
+		Origin:         "*",
+		Methods:        "*",
+		AllowedHeaders: "*",
+		Headers:        "*",
+		ExposedHeaders: "*",
+	})
+	io = socket.NewServer(httpServer, options)
 
 	_ = io.On("connection", func(clients ...any) {
 		log.Println(prefix, "connection", clients)
