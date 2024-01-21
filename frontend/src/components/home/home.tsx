@@ -4,15 +4,23 @@ import Slider from "../slider/slider";
 import Chat from "../chat/chat";
 import MessageBar from "../messageBar/messageBar";
 import { getChats } from "../../apis/getChats";
+import { Message } from "../../types/types";
 
 import CircularProgress from "@mui/material/CircularProgress";
 
 interface HomeProps {
   token: string;
+  currentChatMessages: Message[];
+  selectedChatId: number | null;
+  setSelectedChatId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
-const Home: React.FC<HomeProps> = ({ token }) => {
-  const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
+const Home: React.FC<HomeProps> = ({
+  token,
+  currentChatMessages,
+  selectedChatId,
+  setSelectedChatId,
+}) => {
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -56,14 +64,22 @@ const Home: React.FC<HomeProps> = ({ token }) => {
     <Grid
       container
       spacing={2}
-      style={{ backgroundColor: "rgb(11, 13, 14)", height: "100vh", overflow: "clip" }}
+      style={{
+        backgroundColor: "rgb(11, 13, 14)",
+        height: "100vh",
+        overflow: "clip",
+      }}
     >
       <Grid item xs={4}>
         <Slider onFriendClick={handleChatClick} chats={chats} />
       </Grid>
       <Grid item xs={8} style={{ backgroundColor: "rgb(11, 13, 14)" }}>
         {selectedChatId ? (
-          <Chat token={token} receiverId={selectedChatId} />
+          <Chat
+            token={token}
+            receiverId={selectedChatId}
+            currentChatMessages={currentChatMessages}
+          />
         ) : (
           <MessageBar />
         )}

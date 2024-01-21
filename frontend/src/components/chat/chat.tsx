@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import "./chat.css";
-import { Message } from "../../types/types";
 import Grid from "@mui/material/Grid";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MicNoneIcon from "@mui/icons-material/MicNone";
@@ -11,6 +10,8 @@ import { getChat } from "../../apis/getChat";
 import { getUserName } from "../../apis/getUserName";
 import { sendMessage } from "../../apis/sendMessage";
 import { useRef } from "react";
+
+import { Message } from "../../types/types";
 
 const CssTextField = styled(TextField)({
   "& label.Mui-focused": {
@@ -35,26 +36,30 @@ const CssTextField = styled(TextField)({
 interface ChatProps {
   receiverId: number;
   token: string;
+  currentChatMessages: Message[];
 }
 
-const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
+const Chat: React.FC<ChatProps> = ({
+  receiverId,
+  token,
+  currentChatMessages,
+}) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const chatMessages = await getChat(token, receiverId);
-        setMessages(chatMessages);
-      } catch (error) {
-        console.error("Error fetching chat messages:", error);
+    const fetchChat = async () => {
+      if (messages.length === 0) {
+        try {
+          const chat = await getChat(token, receiverId);
+          setMessages(chat);
+        } catch (error) {
+          setMessages(currentChatMessages);
+        }
       }
     };
-
-    if (receiverId !== null) {
-      fetchMessages();
-    }
-  }, [token, receiverId]);
+    fetchChat();
+  }, [currentChatMessages]);
 
   const [userName, setUserName] = useState<string>("");
 

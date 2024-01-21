@@ -7,13 +7,19 @@ import Home from "./components/home/home";
 import { useState, useEffect } from "react";
 
 import Cookies from "js-cookie";
-import {Message} from "./types/types";
+import { Message } from "./types/types";
 
 document.body.style.backgroundColor = "rgb(11, 13, 14)";
 
 function App() {
   const [token, setToken] = useState<string>("");
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const [mapOfUnreadMessagesCount, setMapOfUnreadMessagesCount] = useState<
+    Record<number, number>
+  >({});
+
+  const [currentChatMessages, setCurrentChatMessages] = useState<Message[]>([]);
+  const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
 
   useEffect(() => {
     const tokenFromCookie = Cookies.get("token");
@@ -39,14 +45,24 @@ function App() {
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
+
     socket.on("new_message", (message: any) => {
+      console.log(message);
       const msg: Message = {
-        messageId: message[0].messageID, // Ensure this is a number
-        fromPersonID: parseInt(message[0].fromPerson), // Parse to number if necessary
-        content: message[0].message, // Ensure this is a string
-        timestamp: message[0].timestamp, // Ensure this is a string
+        messageId: message[0].messageID,
+        fromPersonID: parseInt(message[0].fromPerson),
+        content: message[0].message,
+        timestamp: message[0].timestamp,
       };
 
+      console.log("I'm here", selectedChatId);
+      if (msg.fromPersonID === selectedChatId) {
+        setCurrentChatMessages((prevMessages) => [...prevMessages, msg]);
+        console.log("new message");
+      } else {
+        console.log("new message but not selected");
+        // ... (update mapOfUnreadMessagesCount as in previous example)
+      }
     });
     return () => {
       socket.off("connect", onConnect);
@@ -74,7 +90,7 @@ function App() {
     socket.on("disconnect", onDisconnect);
 
     socket.on("new_message", (message: any) => {
-        console.log(message);
+      console.log(message);
     });
 
     return () => {
@@ -86,7 +102,17 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/home" element={<Home token={token} />} />
+        <Route
+          path="/home"
+          element={
+            <Home
+              token={token}
+              currentChatMessages={currentChatMessages}
+              selectedChatId={selectedChatId}
+              setSelectedChatId={setSelectedChatId}
+            />
+          }
+        />
         <Route
           index
           element={
