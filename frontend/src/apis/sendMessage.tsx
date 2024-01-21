@@ -18,6 +18,7 @@ export const sendMessage = async (
     }
 
     const data = await response.json();
+    return data;
   } catch (error) {
     console.error("SendMessage error:", error);
     throw error;

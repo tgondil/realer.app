@@ -84,19 +84,16 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
   const handleKeyPress = async (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && newMessage.trim() !== "") {
       event.preventDefault();
-      // Call the API to send the message
       try {
-        const response = await sendMessage(token, receiverId, newMessage); // Replace with your actual API call
+        const response = await sendMessage(token, receiverId, newMessage);
         const msg: Message = {
-          messageId: response.messageID,
-          fromPersonID: response.fromPerson,
-          toPersonID: response.toPersonID,
-          content: response.message,
-          createdAt: response.messageTime,
+          messageId: response.messageID, // Ensure this is a number
+          fromPersonID: parseInt(response.fromPerson), // Parse to number if necessary
+          content: response.message, // Ensure this is a string
+          timestamp: response.messageTime, // Format this as a string or a Date
         };
-        setNewMessage(""); // Reset the input field after sending
-        setMessages([...messages, msg]); // Add the new message to the list of messages
-        // Optionally, fetch the latest messages or update the UI
+        setNewMessage("");
+        setMessages((prevMessages) => [...prevMessages, msg]);
       } catch (error) {
         console.error("Error sending message:", error);
       }

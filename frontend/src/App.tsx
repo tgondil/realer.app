@@ -24,52 +24,48 @@ function App() {
   const onLoginSuccess = (newToken: string) => {
     setToken(newToken);
     Cookies.set("token", newToken, { expires: 1 });
-    useEffect(() => {
-      function onConnect() {
-        setIsConnected(true);
-      }
+    function onConnect() {
+      setIsConnected(true);
+    }
 
-      function onDisconnect() {
-        setIsConnected(false);
-      }
+    function onDisconnect() {
+      setIsConnected(false);
+    }
 
-      socket.connect();
+    socket.connect();
 
-      socket.emit("join_subscription", newToken);
+    socket.emit("join_subscription", newToken);
 
-      socket.on("connect", onConnect);
-      socket.on("disconnect", onDisconnect);
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
 
-      return () => {
-        socket.off("connect", onConnect);
-        socket.off("disconnect", onDisconnect);
-      };
-    }, []);
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+    };
   };
   const onRegisterSuccess = (newToken: string) => {
     setToken(newToken);
     Cookies.set("token", newToken, { expires: 1 });
-    useEffect(() => {
-      function onConnect() {
-        setIsConnected(true);
-      }
+    function onConnect() {
+      setIsConnected(true);
+    }
 
-      function onDisconnect() {
-        setIsConnected(false);
-      }
+    function onDisconnect() {
+      setIsConnected(false);
+    }
 
-      socket.connect();
+    socket.connect();
 
-      socket.emit("join_subscription", newToken);
+    socket.emit("join_subscription", newToken);
 
-      socket.on("connect", onConnect);
-      socket.on("disconnect", onDisconnect);
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
 
-      return () => {
-        socket.off("connect", onConnect);
-        socket.off("disconnect", onDisconnect);
-      };
-    }, []);
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+    };
   };
 
   return (
