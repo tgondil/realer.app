@@ -14,7 +14,7 @@ export const getUserName = async (token: string, userID: number) => {
     }
 
     const data = await response.json();
-    return data.userName;
+    return data.personName;
   } catch (error) {
     console.error("Get Messages error:", error);
     throw error;

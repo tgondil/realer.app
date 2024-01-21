@@ -1,19 +1,9 @@
-import React from "react";
 import { Route, Routes } from "react-router";
-import logo from "./logo.svg";
 import "./App.css";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import Slider from "./components/slider/slider";
-import MessageBar from "./components/messageBar/messageBar";
-import Chat from "./components/chat/chat";
 import Login from "./components/login/login";
 import Home from "./components/home/home";
 
 import { useState } from "react";
-import { Message } from "./types/types";
-//npm install @mui/material @emotion/react @emotion/styled
 
 document.body.style.backgroundColor = "rgb(11, 13, 14)";
 
