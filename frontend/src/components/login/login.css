@@ -36,6 +36,9 @@ h1 {
     letter-spacing: 2px;
     font-family: NexaEB, sans-serif;
     color: aliceblue;
+    position: absolute;
+    top: 35%;
+    left: 34%;
 }
 
 .gradient {
@@ -54,6 +57,7 @@ h1 {
     font-size: 120px;
     font-family: NexaEB, sans-serif;
     letter-spacing: 3px;
+    margin-bottom: 0px;
 }
 
 @keyframes textShine {

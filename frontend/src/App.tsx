@@ -1,4 +1,5 @@
 import React from "react";
+import { Route, Routes } from "react-router";
 import logo from "./logo.svg";
 import "./App.css";
 import Box from "@mui/material/Box";
@@ -8,6 +9,7 @@ import Slider from "./components/slider/slider";
 import MessageBar from "./components/messageBar/messageBar";
 import Chat from "./components/chat/chat";
 import Login from "./components/login/login";
+import Home from "./components/home/home";
 
 import {messagesMap} from "./dummy_data/users";
 import { useState } from "react";
@@ -26,24 +28,12 @@ function App() {
     const chatToDisplay = messagesMap[id];
     setSelectedChat(chatToDisplay);
   };
-
+  
   return (<>
-    <Login />
-
-    <Grid
-      container
-      spacing={2}
-      style={{ backgroundColor: "#0F1B29", height: "100vh" }}
-    >
-      <Grid item xs={4}>
-        <Slider onFriendClick={handleFriendClick}/>
-      </Grid>
-      <Grid item xs={8} style={{ backgroundColor: "#0F1B29" }}>
-        {selectedFriendId ? <>
-        <Chat messages={selectedChat} receiverId={selectedFriendId }/> 
-        </>: <MessageBar />}
-      </Grid>
-    </Grid>
+      <Routes>
+        <Route index element={<Home />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
     </>
   );
 }
