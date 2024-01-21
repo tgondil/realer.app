@@ -33,8 +33,9 @@ type MessageDBModel struct {
 }
 
 type ChatDBModel struct {
-	ChatID int64 `json:"chatID"`
-	PersonDBModel
+	ChatID     int64  `json:"chatID"`
+	PersonID   int64  `json:"personID"`
+	PersonName string `json:"personName"`
 }
 
 type PersonDBModel struct {
