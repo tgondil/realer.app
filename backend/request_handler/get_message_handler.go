@@ -41,7 +41,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) (e error, statusCode int) {
 	var (
 		personIDStr string
 	)
-	personIDRaw := chi.URLParam(r, "otherPersonID")
+	personIDRaw := chi.URLParam(r, "userID")
 	var err error
 	if personIDStr, err = url.QueryUnescape(personIDRaw); err != nil {
 		personIDStr = personIDRaw
