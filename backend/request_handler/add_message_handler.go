@@ -6,7 +6,7 @@ import (
 	"backend/model/common_models"
 	"backend/redisdb"
 	"backend/utilities/appjson"
-	r2 "backend/utilities/cloudflareR2utils"
+	s3 "backend/utilities/s3utils"
 	"bytes"
 	"errors"
 	"fmt"
@@ -52,6 +52,7 @@ func SendMessageWithFile(w http.ResponseWriter, r *http.Request) (e error, statu
 		fileNameString, contentType string
 		file                        multipart.File
 		ok                          bool
+		fileLengthInSeconds         int64
 		fileSizeInBytes             int64
 		nowTime                     time.Time
 	)
@@ -70,7 +71,13 @@ func SendMessageWithFile(w http.ResponseWriter, r *http.Request) (e error, statu
 		} else {
 			toPersonID = tmpInt
 		}
-
+	}
+	if tempSlice, ok = form.Value["audioLength"]; ok && len(tempSlice) > 0 {
+		if tmpInt, parseErr := strconv.ParseInt(tempSlice[0], 10, 64); err != nil {
+			return parseErr, 400
+		} else {
+			fileLengthInSeconds = tmpInt
+		}
 	}
 
 	fileBytes := filePool.Get().(*bytes.Buffer)
@@ -87,7 +94,7 @@ func SendMessageWithFile(w http.ResponseWriter, r *http.Request) (e error, statu
 	pathBuilder.WriteString("_")
 	pathBuilder.WriteString(formFile.Filename)
 	fileNameString = pathBuilder.String()
-	contentType = r2.GetContentType(formFile.Filename)
+	contentType = s3.GetContentType(formFile.Filename)
 
 	if file, err = formFile.Open(); err != nil {
 		_ = file.Close()
@@ -97,39 +104,16 @@ func SendMessageWithFile(w http.ResponseWriter, r *http.Request) (e error, statu
 		return err, 400
 	}
 	_ = file.Close()
-	if err = r2.UploadBytes(fileBytes.Bytes(), fileNameString, contentType); err != nil {
+	if err = s3.UploadBytes(fileBytes.Bytes(), fileNameString, contentType); err != nil {
 		return err, 400
 	}
-	/*if strings.HasPrefix(contentType, "image") {
-		if img, err = imaging.Decode(fileBytes); err == nil {
-			size := img.Bounds().Size()
-			thumb := imaging.Resize(img, int(float64(size.X)*0.15), int(float64(size.Y)*0.15), imaging.NearestNeighbor)
-			switch contentType {
-			case "image/png":
-				err = png.Encode(thumbBytes, thumb)
-			case "image/jpeg":
-				err = jpeg.Encode(thumbBytes, thumb, nil)
-			case "image/bmp":
-				err = bmp.Encode(thumbBytes, thumb)
-			case "image/gif":
-				err = gif.Encode(thumbBytes, thumb, nil)
-			case "image/tiff":
-				err = tiff.Encode(thumbBytes, thumb, nil)
-			}
-			if err == nil {
-				_ = r2.UploadBytes(thumbBytes.Bytes(), strings.Join([]string{
-					pathBuilder.String()[1:],
-					fileNameString,
-				}, ""), s3BucketName, contentType)
-			}
 
-		}
-	}*/
 	redisM := common_models.MessageDBModel{
-		MessageID:    0,
-		Timestamp:    nowTime.Format(time.DateTime),
-		MessageAudio: fileNameString,
-		TextReaction: "",
+		MessageID:            0,
+		Timestamp:            nowTime.Format(time.DateTime),
+		MessageAudio:         fileNameString,
+		AudioLengthInSeconds: fileLengthInSeconds,
+		TextReaction:         "",
 	}
 	if !redisdb.ChatExists(authTokenData.PersonID, toPersonID) {
 		if _, err = redisdb.CreateChat(authTokenData.PersonID, toPersonID, nowTime.UnixMilli()); err != nil {
@@ -223,7 +207,6 @@ func AddReactionToAudio(w http.ResponseWriter, r *http.Request) (e error, status
 	})
 	_, err = w.Write([]byte("success"))
 	return err, 400
-
 }
 
 func AddReactionToText(w http.ResponseWriter, r *http.Request) (e error, statusCode int) {

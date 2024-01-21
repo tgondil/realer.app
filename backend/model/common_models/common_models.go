@@ -23,17 +23,23 @@ func NewSendMessageRequestModel() *SendMessageRequestModel {
 }
 
 type MessageDBModel struct {
-	MessageID     int64             `json:"messageID"`
-	Timestamp     string            `json:"timestamp"`
-	MessageText   string            `json:"messageText"`
-	TextReaction  string            `json:"textReaction"`
-	MessageAudio  string            `json:"audioPath"`
-	AudioReaction []ReactionDBModel `json:"audioReaction"`
+	MessageID            int64             `json:"messageID"`
+	Timestamp            string            `json:"timestamp,omitempty"`
+	MessageText          string            `json:"messageText,omitempty"`
+	TextReaction         string            `json:"textReaction,omitempty"`
+	MessageAudio         string            `json:"audioPath,omitempty"`
+	AudioLengthInSeconds int64             `json:"audioLengthInSeconds,omitempty"`
+	AudioReaction        []ReactionDBModel `json:"audioReaction,omitempty"`
 }
 
 type ChatDBModel struct {
-	ChatID      int64 `json:"chatID"`
-	ForPersonID int64 `json:"forPersonID"`
+	ChatID int64 `json:"chatID"`
+	PersonDBModel
+}
+
+type PersonDBModel struct {
+	PersonID   int64  `json:"personID"`
+	PersonName string `json:"personName"`
 }
 
 type ReactionDBModel struct {
