@@ -13,18 +13,23 @@ const Login = () => {
     return (<>
     <div style={{height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap", rowGap: "0" }}>
     <h1 className="hero big gradient" >
-    
-        
-         realer </h1>
-         <br />
-         <span className="hero gradient"><ReactTyped
-          strings={["Make conversations ", "Texting never felt ", "Connecting to people just got "]}
+         realer<br />
+         <span className="subtext">
+         <ReactTyped
+          strings={["Make conversations realer", "Texting never felt realer", "Connecting to people just got realer"]}
           typeSpeed={100}
           loop
           backSpeed={20}
           cursorChar=""
           showCursor={true}
         /></span>
+         </h1>
+    <h1>
+    
+    
+        
+    </h1>
+         
     
     <br />
     

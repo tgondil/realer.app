@@ -25,10 +25,17 @@ h1 {
 }
 
 .hero {
-
     font-size: 70px;
     letter-spacing: 2px;
     font-family: NexaEB, sans-serif;
+    color: aliceblue;
+}
+
+.subtext {
+    font-size: 50px;
+    letter-spacing: 2px;
+    font-family: NexaEB, sans-serif;
+    color: aliceblue;
 }
 
 .gradient {
