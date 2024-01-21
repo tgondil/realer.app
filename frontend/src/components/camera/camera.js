@@ -1,7 +1,7 @@
 import * as faceapi from 'face-api.js';
 import React from 'react';
 
-function Camera2() {
+function Camera() {
 
   const [modelsLoaded, setModelsLoaded] = React.useState(false);
   const [captureVideo, setCaptureVideo] = React.useState(false);
@@ -58,6 +58,40 @@ function Camera2() {
         canvasRef && canvasRef.current && faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
         canvasRef && canvasRef.current && faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
         canvasRef && canvasRef.current && faceapi.draw.drawFaceExpressions(canvasRef.current, resizedDetections);
+        //print to console the highest expression
+
+        if (resizedDetections[0]) {
+          let expressions = resizedDetections[0].expressions;
+
+          
+          if (expressions.disgusted > 0.3) {
+            console.log("disgusted");
+          }
+          else if (expressions.surprised > 0.4) {
+            console.log("surprised");
+          }
+          else if (expressions.fearful > 0.3) {
+            console.log("fearful");
+          }
+          else if (expressions.angry > 0.6) {
+            console.log("angry");
+          }
+          else if (expressions.sad > 0.6) {
+            console.log("sad");
+          }
+          else if (expressions.happy > 0.7 && expressions.happy < 0.95) {
+            console.log("happy");
+          }
+          else if (expressions.happy > 0.95) {
+            console.log("very happy");
+          }
+          else if (expressions.neutral > 0.9) {
+            console.log("neutral");
+          }
+
+          //if alternating between happy and very happy, then happy:
+
+        }
       }
     }, 100)
   }
@@ -101,4 +135,4 @@ function Camera2() {
   );
 }
 
-export default Camera2;
+export default Camera;
