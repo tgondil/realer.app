@@ -8,7 +8,7 @@ import { Chat } from "../../types/types";
 
 interface SliderProps {
   onFriendClick: (id: number) => void;
-  chats: Chat[]; // Add type for chats
+  chats: Chat[];
 }
 
 const Slider: React.FC<SliderProps> = ({ onFriendClick, chats }) => {

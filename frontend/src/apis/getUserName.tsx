@@ -1,6 +1,6 @@
-export const getChats = async (token: string) => {
+export const getUserName = async (token: string, userID: number) => {
   try {
-    const response = await fetch("http://44.221.67.84:8080/chats", {
+    const response = await fetch(`http://44.221.67.84:8080/user/${userID}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -14,7 +14,7 @@ export const getChats = async (token: string) => {
     }
 
     const data = await response.json();
-    return data;
+    return data.personName;
   } catch (error) {
     console.error("Get Messages error:", error);
     throw error;
