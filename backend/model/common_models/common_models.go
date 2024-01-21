@@ -9,7 +9,7 @@ type SocketAndResponseModel struct {
 	Message                string            `json:"message"`
 	MessageFile            string            `json:"messageFile,omitempty"`
 	MessageFileSizeInBytes int64             `json:"messageFileSizeInBytes,omitempty"`
-	MessageTime            int64             `json:"messageTime,omitempty"`
+	MessageTime            string            `json:"messageTime,omitempty"`
 	TextReaction           string            `json:"reaction,omitempty"`
 	AudioReaction          []ReactionDBModel `json:"audioReaction,omitempty"`
 }

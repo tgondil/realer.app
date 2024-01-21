@@ -88,6 +88,7 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
       try {
         await sendMessage(token, receiverId, newMessage); // Replace with your actual API call
         setNewMessage(""); // Reset the input field after sending
+        setMessages([...messages, {   messageId: 10, timestamp: Date.now(), content: newMessage, fromPersonID: 0;}]])
         // Optionally, fetch the latest messages or update the UI
       } catch (error) {
         console.error("Error sending message:", error);
