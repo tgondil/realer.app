@@ -5,6 +5,8 @@ import Chat from "../chat/chat";
 import MessageBar from "../messageBar/messageBar";
 import { getChats } from "../../apis/getChats";
 
+import CircularProgress from "@mui/material/CircularProgress";
+
 interface HomeProps {
   token: string;
 }
@@ -12,22 +14,43 @@ interface HomeProps {
 const Home: React.FC<HomeProps> = ({ token }) => {
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
   const [chats, setChats] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadChats = async () => {
-      try {
-        const chatData = await getChats(token);
-        setChats(chatData);
-      } catch (error) {
-        console.error("Error fetching chats:", error);
+      setIsLoading(true);
+      if (token) {
+        try {
+          const chatData = await getChats(token);
+          setChats(chatData);
+        } catch (error) {
+          console.error("Error fetching chats:", error);
+        }
       }
+      setIsLoading(false);
     };
+
     loadChats();
-  }, []);
+  }, [token]);
 
   const handleChatClick = (id: number) => {
     setSelectedChatId(id);
   };
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <Grid

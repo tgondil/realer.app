@@ -3,19 +3,30 @@ import "./App.css";
 import Login from "./components/login/login";
 import Home from "./components/home/home";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import Cookies from "js-cookie";
 
 document.body.style.backgroundColor = "rgb(11, 13, 14)";
 
 function App() {
   const [token, setToken] = useState<string>("");
 
-  const onLoginSuccess = (newToken: string) => {
-    setToken(newToken);
-  };
+  useEffect(() => {
+    const tokenFromCookie = Cookies.get("token");
+    if (tokenFromCookie) {
+      setToken(tokenFromCookie);
+    }
+  }, []);
 
   const onRegisterSuccess = (newToken: string) => {
     setToken(newToken);
+    Cookies.set("token", newToken, { expires: 1 });
+  };
+
+  const onLoginSuccess = (newToken: string) => {
+    setToken(newToken);
+    Cookies.set("token", newToken, { expires: 1 });
   };
 
   return (
