@@ -17,11 +17,7 @@ var httpServer *types.HttpServer
 func Init() {
 	const prefix = "Socket"
 
-	httpServer = types.NewWebServer(nil)/*http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Credentials", "true")
-		origin := r.Header.Get("Origin")
-		w.Header().Set("Access-Control-Allow-Origin", origin)
-	})*/
+	httpServer = types.NewWebServer(nil)
 	options := socket.DefaultServerOptions()
 	options.SetCors(&types.Cors{
 		Origin:         "*",

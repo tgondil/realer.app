@@ -7,13 +7,16 @@ import Home from "./components/home/home";
 import { useState, useEffect } from "react";
 
 import Cookies from "js-cookie";
-import {Message} from "./types/types";
+import { Message } from "./types/types";
 
 document.body.style.backgroundColor = "rgb(11, 13, 14)";
 
 function App() {
   const [token, setToken] = useState<string>("");
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const [mapOfUnreadMessagesCount, setMapOfUnreadMessagesCount] = useState<
+    Record<number, number>
+  >({});
 
   useEffect(() => {
     const tokenFromCookie = Cookies.get("token");
@@ -39,6 +42,7 @@ function App() {
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
+
     socket.on("new_message", (message: any) => {
       const msg: Message = {
         messageId: message[0].messageID, // Ensure this is a number
@@ -46,7 +50,6 @@ function App() {
         content: message[0].message, // Ensure this is a string
         timestamp: message[0].timestamp, // Ensure this is a string
       };
-
     });
     return () => {
       socket.off("connect", onConnect);
@@ -74,7 +77,7 @@ function App() {
     socket.on("disconnect", onDisconnect);
 
     socket.on("new_message", (message: any) => {
-        console.log(message);
+      console.log(message);
     });
 
     return () => {
