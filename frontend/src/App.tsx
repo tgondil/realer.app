@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import Slider from "./components/slider/slider";
 import MessageBar from "./components/messageBar/messageBar";
 import Chat from "./components/chat/chat";
+import Login from "./components/login/login";
 
 import {messagesMap} from "./dummy_data/users";
 import { useState } from "react";
@@ -26,7 +27,9 @@ function App() {
     setSelectedChat(chatToDisplay);
   };
 
-  return (
+  return (<>
+    <Login />
+
     <Grid
       container
       spacing={2}
@@ -41,6 +44,7 @@ function App() {
         </>: <MessageBar />}
       </Grid>
     </Grid>
+    </>
   );
 }
 

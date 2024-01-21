@@ -1,0 +1,63 @@
+body {
+    background-image: "https://images.unsplash.com/photo-1517245386807-9b4d0dd8eac1?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2hhdCUyMGJhY2tncm91bmQlMjB3b3JsZHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80";
+}
+
+h1 {
+    color: aliceblue;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Roboto:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Libre+Baskerville&family=Roboto:wght@500&display=swap');
+
+@font-face {
+    font-family: InvisibleEB;
+    src: url("../assets/fonts/Invisible-ExtraBold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: NexaEB;
+    src: url("../assets/fonts/Nexa-ExtraLight.ttf") format('truetype');
+}
+
+@font-face {
+    font-family: NexaH;
+    src: url("../assets/fonts/Nexa-Heavy.ttf") format('truetype');
+}
+
+.hero {
+
+    font-size: 70px;
+    letter-spacing: 2px;
+    font-family: 'InvisibleEB', sans-serif;
+}
+
+.gradient {
+    background: linear-gradient(
+        to right,
+        rgba(0,212,255,1)0%, #B8B5FF 35%, #41AEA9 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 500% auto;
+    animation: textShine 5s ease-in-out infinite alternate;
+}
+
+.big {
+    font-size: 120px;
+    font-family: NexaEB, sans-serif;
+    letter-spacing: 3px;
+}
+
+@keyframes textShine {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+.new-line {
+    white-space: pre-line;
+}

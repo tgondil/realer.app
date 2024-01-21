@@ -24,6 +24,7 @@
 }
 
 .chat {
+  background-image: "../assets/images/star_background.jpeg";
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -214,15 +215,13 @@
 
 .chat-header {
   display: flex;
-  align-items: center; /* Aligns items vertically in the center */
-  gap: 10px; /* Optional: Adds some space between the image and the header */
-  border-color: #66B2FF;
-  border-bottom: 2px solid #ccc; /* Adds a border only to the bottom */
+  align-items: center;
+  background-color: #0F1B29;
+  gap: 10px;
 }
 
 .friend-image {
-  width: 50px; /* Adjust as needed */
-  height: 50px; /* Adjust as needed */
-  border-radius: 50%; /* Makes the image circular */
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
 }
-

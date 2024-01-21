@@ -18,8 +18,6 @@ export const friends: Record<number, Friend> = {
   15: { id: 15, name: 'Alicia Ferrell' },
 };
 
-
-
 export const messagesMap: Record<number, Message[]> = {
   1: [
     { messageId: 1, timestamp: '2024-01-20 08:00', type: 'text', isSenderYou: true, content: 'Good morning!', senderId: 0, receiverId: 1 },
@@ -78,8 +76,6 @@ export const messagesMap: Record<number, Message[]> = {
     { messageId: 29, timestamp: '2024-01-20 09:15', type: 'text', isSenderYou: false, content: 'Pretty good, just started my day.', senderId: 6, receiverId: 0 },
     { messageId: 30, timestamp: '2024-01-20 09:20', type: 'text', isSenderYou: true, content: 'Have a great day ahead!', senderId: 0, receiverId: 6 },
   ],
-
-// Continuing from the previous data...
   7: [
     { messageId: 31, timestamp: '2024-01-20 09:00', type: 'text', isSenderYou: true, content: 'Good morning!', senderId: 0, receiverId: 7 },
     { messageId: 32, timestamp: '2024-01-20 09:05', type: 'text', isSenderYou: false, content: 'Morning! How are you?', senderId: 7, receiverId: 0 },
