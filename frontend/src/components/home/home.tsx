@@ -20,12 +20,12 @@ const Home = () => {
     <Grid
       container
       spacing={2}
-      style={{ backgroundColor: "#0F1B29", height: "100vh" }}
+      style={{ backgroundColor: "rgb(11, 13, 14)", height: "100vh" }}
     >
       <Grid item xs={4}>
         <Slider onFriendClick={handleFriendClick}/>
       </Grid>
-      <Grid item xs={8} style={{ backgroundColor: "#0F1B29" }}>
+      <Grid item xs={8} style={{ backgroundColor: "rgb(11, 13, 14)" }}>
         {selectedFriendId ? (
           <Chat messages={selectedChat} receiverId={selectedFriendId} />
         ) : (

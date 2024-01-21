@@ -23,7 +23,7 @@
   overflow: hidden;
   scroll-behavior: smooth;
   height: 100vh;
-  background-color: #0F1B29;
+  background-color: rgb(11, 13, 14);
 }
 
 .scrollable-section {
@@ -40,7 +40,7 @@
 }
 
 .friend-item {
-  background-color: #0F1B29;
+  background-color: rgb(11, 13, 14);
   border-radius: 10px;
   display: flex;
   flex-direction: start;
@@ -86,7 +86,7 @@
   top: 0;
   z-index: 100;
   width: 90%;
-  background-color: #0F1B29;
+  background-color: rgb(11, 13, 14);
   border-radius: 10px;
   margin-left: 10px;
   scrollbar-color: black, white;
@@ -98,7 +98,7 @@
   border-radius: 10px;
   flex-direction: start;
   border: 1px solid #ccc;
-  background-color: #0F1B29;
+  background-color: rgb(11, 13, 14);
   color: white;
   text-align: center;
   align-items: center;

@@ -16,12 +16,17 @@ import { useState } from "react";
 import { Message } from "./types/types";
 //npm install @mui/material @emotion/react @emotion/styled
 
-document.body.style.backgroundColor = "#0B0D0E";
+document.body.style.backgroundColor = "rgb(11, 13, 14)";
 
 
 function App() {
   const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
   const [selectedChat, setSelectedChat] = useState<Message[]>([]);
+  const [token, setToken] = useState<string>("");
+
+  const onLoginSuccess = (newToken: string) => {
+    setToken(newToken);
+  };
 
   const handleFriendClick = (id: number) => {
     setSelectedFriendId(id);
@@ -32,7 +37,7 @@ function App() {
   return (<>
       <Routes>
         <Route index element={<Home />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login onLoginSuccess={onLoginSuccess}/>} />
       </Routes>
     </>
   );

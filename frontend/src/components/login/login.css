@@ -41,6 +41,16 @@ h1 {
     left: 34%;
 }
 
+.subtext2 {
+    font-size: 20px;
+    letter-spacing: 2px;
+    font-family: NexaEB, sans-serif;
+    color: aliceblue;
+    position: absolute;
+    top: 81%;
+    left: 41%;
+}
+
 .gradient {
     background: linear-gradient(
         to right,
