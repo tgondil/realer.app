@@ -196,9 +196,9 @@ func AddReactionToAudio(w http.ResponseWriter, r *http.Request) (e error, status
 	}
 
 	body := new(struct {
-		MessageID  int64 `json:"messageID"`
-		ToPersonID int64 `json:"toPersonID"`
-		Reaction   []common_models.ReactionDBModel
+		MessageID  int64                           `json:"messageID"`
+		ToPersonID int64                           `json:"toPersonID"`
+		Reactions  []common_models.ReactionDBModel `json:"reactions"`
 	})
 
 	err := appjson.UnmarshalRequestBody(r.Body, body)
@@ -206,12 +206,12 @@ func AddReactionToAudio(w http.ResponseWriter, r *http.Request) (e error, status
 		return err, 400
 	}
 
-	if err = redisdb.AddReactionToAudio(authTokenData.PersonID, body.ToPersonID, body.MessageID, body.Reaction); err != nil {
+	if err = redisdb.AddReactionToAudio(authTokenData.PersonID, body.ToPersonID, body.MessageID, body.Reactions); err != nil {
 		return err, 400
 	}
 	socket.Broadcast([]int64{body.ToPersonID}, "audio_reaction", common_models.SocketAndResponseModel{
 		MessageID:     body.MessageID,
-		AudioReaction: body.Reaction,
+		AudioReaction: body.Reactions,
 	})
 	_, err = w.Write([]byte("success"))
 	return err, 400
