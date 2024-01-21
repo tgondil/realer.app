@@ -23,7 +23,7 @@ const Home = () => {
       style={{ backgroundColor: "rgb(11, 13, 14)", height: "100vh" }}
     >
       <Grid item xs={4}>
-        <Slider onFriendClick={handleFriendClick}/>
+        <Slider onFriendClick={handleFriendClick} />
       </Grid>
       <Grid item xs={8} style={{ backgroundColor: "rgb(11, 13, 14)" }}>
         {selectedFriendId ? (

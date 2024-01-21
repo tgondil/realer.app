@@ -11,13 +11,12 @@ import Chat from "./components/chat/chat";
 import Login from "./components/login/login";
 import Home from "./components/home/home";
 
-import {messagesMap} from "./dummy_data/users";
+import { messagesMap } from "./dummy_data/users";
 import { useState } from "react";
 import { Message } from "./types/types";
 //npm install @mui/material @emotion/react @emotion/styled
 
 document.body.style.backgroundColor = "rgb(11, 13, 14)";
-
 
 function App() {
   const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
@@ -28,16 +27,29 @@ function App() {
     setToken(newToken);
   };
 
+  const onRegisterSuccess = (newToken: string) => {
+    setToken(newToken);
+  };
+
   const handleFriendClick = (id: number) => {
     setSelectedFriendId(id);
     const chatToDisplay = messagesMap[id];
     setSelectedChat(chatToDisplay);
   };
-  
-  return (<>
+
+  return (
+    <>
       <Routes>
-        <Route index element={<Home />} />
-        <Route path="/login" element={<Login onLoginSuccess={onLoginSuccess}/>} />
+        <Route path="/home" element={<Home />} />
+        <Route
+          index
+          element={
+            <Login
+              onLoginSuccess={onLoginSuccess}
+              onRegisterSuccess={onRegisterSuccess}
+            />
+          }
+        />
       </Routes>
     </>
   );

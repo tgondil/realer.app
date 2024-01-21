@@ -13,21 +13,41 @@ import Button from "@mui/material/Button";
 import { FormControl, FormLabel } from "@mui/material";
 import { Height } from "@mui/icons-material";
 import { login } from "../../apis/login";
+import { signup } from "../../apis/signup";
+import { useNavigate } from "react-router-dom";
 
 interface LoginProps {
   onLoginSuccess: (token: string) => void;
+  onRegisterSuccess: (token: string) => void;
 }
 
-const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
+const Login: React.FC<LoginProps> = ({ onLoginSuccess, onRegisterSuccess }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoginMode, setIsLoginMode] = useState(true);
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const receivedToken = await login(username, password);
       onLoginSuccess(receivedToken);
+      navigate("/home");
     } catch (error) {
       console.error("Login error:", error);
+    }
+  };
+
+  const toggleMode = () => {
+    setIsLoginMode(!isLoginMode);
+  };
+
+  const handleRegister = async () => {
+    try {
+      const receivedToken = await signup(username, password);
+      onRegisterSuccess(receivedToken);
+      navigate("/home");
+    } catch (error) {
+      console.error("Register error:", error);
     }
   };
 
@@ -85,16 +105,23 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
               marginBottom: "40px",
             }}
           ></TextField>
-          <Button
-            variant="outlined"
-            onClick={handleLogin}
-            sx={{
-              height: "50px",
-              border: 3,
-            }}
-          >
-            Login
-          </Button>
+          {isLoginMode ? (
+            <Button
+              variant="outlined"
+              onClick={handleLogin}
+              sx={{ height: "50px", border: 3 }}
+            >
+              Login
+            </Button>
+          ) : (
+            <Button
+              variant="outlined"
+              onClick={handleRegister}
+              sx={{ height: "50px", border: 3 }}
+            >
+              Register
+            </Button>
+          )}
         </FormControl>
 
         <h1 style={{ flexBasis: "100%" }}>
@@ -111,7 +138,23 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           </span>
         </h1>
 
-        <h1 className="subtext2">Not a member? <a><u>Sign up</u></a></h1> 
+        <h1 className="subtext2">
+          {isLoginMode ? (
+            <>
+              Not a member?{" "}
+              <a href="#!" onClick={toggleMode}>
+                <u>Sign up</u>
+              </a>
+            </>
+          ) : (
+            <>
+              Already a member?{" "}
+              <a href="#!" onClick={toggleMode}>
+                <u>Log in</u>
+              </a>
+            </>
+          )}
+        </h1>
 
         <br />
       </div>

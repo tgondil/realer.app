@@ -1,19 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Roboto:wght@500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Libre+Baskerville&family=Roboto:wght@500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Roboto:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Libre+Baskerville&family=Roboto:wght@500&display=swap");
 
 @font-face {
-    font-family: InvisibleEB;
-    src: url("../assets/fonts/Invisible-ExtraBold.otf") format("opentype");
+  font-family: InvisibleEB;
+  src: url("../assets/fonts/Invisible-ExtraBold.otf") format("opentype");
 }
 
 @font-face {
-    font-family: NexaEB;
-    src: url("../assets/fonts/Nexa-ExtraLight.ttf") format('truetype');
+  font-family: NexaEB;
+  src: url("../assets/fonts/Nexa-ExtraLight.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: NexaH;
-    src: url("../assets/fonts/Nexa-Heavy.ttf") format('truetype');
+  font-family: NexaH;
+  src: url("../assets/fonts/Nexa-Heavy.ttf") format("truetype");
 }
 
 .container {
@@ -51,27 +51,25 @@
   box-sizing: border-box;
   width: 98%;
   border: 1px solid #ccc;
-  background: linear-gradient(#131219, #131219) padding-box, linear-gradient(
-        var(--angle),
-        #070707,
-        #687aff
-      ) border-box;
+  background:
+    linear-gradient(#131219, #131219) padding-box,
+    linear-gradient(var(--angle), #070707, #687aff) border-box;
   animation: 8s rotate linear infinite;
   padding: 10px 10px 10px 10px;
   scrollbar-color: black, white;
 }
 
 @keyframes rotate {
-    to {
-      --angle: 360deg;
-    }
+  to {
+    --angle: 360deg;
   }
-  
-  @property --angle {
-    syntax: "<angle>";
-    initial-value: 0deg;
-    inherits: false;
-  }
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
 
 .friend-image {
   width: 50px;
@@ -109,4 +107,3 @@
 .search-bar input:focus {
   outline: none;
 }
-

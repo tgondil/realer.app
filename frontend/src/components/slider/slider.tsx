@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 import { useState } from "react";
 
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import TextField from "@mui/material/TextField";
-import TopBar from './topBar';
+import TopBar from "./topBar";
 
 import "./slider.css";
-import { friends } from '../../dummy_data/users'; // Assuming friendsMap is imported from your data file
+import { friends } from "../../dummy_data/users"; // Assuming friendsMap is imported from your data file
 
 interface Friend {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 }
 
 interface SliderProps {
@@ -21,13 +21,16 @@ interface SliderProps {
 const Slider: React.FC<SliderProps> = ({ onFriendClick }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filterFriends = (query: string, friendsMap: Record<number, Friend>): Friend[] => {
+  const filterFriends = (
+    query: string,
+    friendsMap: Record<number, Friend>,
+  ): Friend[] => {
     const friendsArray = Object.values(friendsMap); // Convert map to array
     if (!query) {
       return friendsArray;
     }
-    return friendsArray.filter(friend =>
-      friend.name.toLowerCase().includes(query.toLowerCase())
+    return friendsArray.filter((friend) =>
+      friend.name.toLowerCase().includes(query.toLowerCase()),
     );
   };
 
@@ -45,9 +48,17 @@ const Slider: React.FC<SliderProps> = ({ onFriendClick }) => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        {filteredFriends.map(friend => (
-          <div key={friend.id} className=" friend-item" onClick={() => onFriendClick(friend.id)}>
-            <img className="friend-image" src={`https://i.pravatar.cc/150?img=${friend.id}`} alt={friend.name} />
+        {filteredFriends.map((friend) => (
+          <div
+            key={friend.id}
+            className=" friend-item"
+            onClick={() => onFriendClick(friend.id)}
+          >
+            {/* <img
+              className="friend-image"
+              src={`https://i.pravatar.cc/150?img=${friend.id}`}
+              alt={friend.name}
+            /> */}
             <p>{friend.name}</p>
           </div>
         ))}
@@ -55,5 +66,5 @@ const Slider: React.FC<SliderProps> = ({ onFriendClick }) => {
     </div>
   );
 };
-          
+
 export default Slider;

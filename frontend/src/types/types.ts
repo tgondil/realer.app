@@ -1,7 +1,7 @@
 export interface Message {
   messageId: number;
   timestamp: string;
-  type: 'audio' | 'text';
+  type: "audio" | "text";
   isSenderYou: boolean;
   content: string;
   senderId: number;
@@ -9,6 +9,12 @@ export interface Message {
 }
 
 export interface Friend {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
+}
+
+export interface Chat {
+  chatID: number;
+  personID: number;
+  PErsonName: string;
 }
