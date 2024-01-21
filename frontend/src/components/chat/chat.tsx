@@ -75,10 +75,11 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
   const handleKeyPress = async (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && newMessage.trim() !== "") {
       event.preventDefault();
-
+      // Call the API to send the message
       try {
-        await sendMessage(token, receiverId, newMessage);
-        setNewMessage("");
+        await sendMessage(token, receiverId, newMessage); // Replace with your actual API call
+        setNewMessage(""); // Reset the input field after sending
+        // Optionally, fetch the latest messages or update the UI
       } catch (error) {
         console.error("Error sending message:", error);
       }
@@ -131,7 +132,7 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
             id="custom-css-outlined-input"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyPress={handleKeyPress} // Add the key press handler here
           />
         </Grid>
         <Grid item xs={1} style={{ paddingTop: "0" }}>
