@@ -196,12 +196,12 @@ func CreateChat(person1, person2, nowTimestamp int64) (chatID int64, err error) 
 	if err != nil {
 		return 0, err
 	}
-	cmd = client.HSet(ctx, fmt.Sprintf("chats:%d", person1), chatModel1.ChatID, chatModelJson)
+	cmd = client.HSet(ctx, fmt.Sprintf("chats:%d", person2), chatModel1.ChatID, chatModelJson)
 	if e1 := cmd.Err(); e1 != nil {
 		return 0, e1
 	}
 	chatModelJson, err = appjson.Marshal(chatModel2)
-	cmd = client.HSet(ctx, fmt.Sprintf("chats:%d", person2), chatModel2.ChatID, chatModelJson)
+	cmd = client.HSet(ctx, fmt.Sprintf("chats:%d", person1), chatModel2.ChatID, chatModelJson)
 	if e1 := cmd.Err(); e1 != nil {
 		return 0, e1
 	}
