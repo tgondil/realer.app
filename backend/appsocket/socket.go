@@ -20,6 +20,7 @@ func Init() {
 	io = socket.NewServer(httpServer, nil)
 
 	_ = io.On("connection", func(clients ...any) {
+		log.Println(prefix, "connection", clients)
 		defer func() {
 			if r := recover(); r != nil {
 				log.Println("Socket recover", r)
@@ -27,6 +28,7 @@ func Init() {
 		}()
 		client := clients[0].(*socket.Socket)
 		_ = client.On("join_subscription", func(data ...any) {
+			log.Println(prefix, "join_subscription", data)
 			if len(data) != 1 {
 				leaveAllAndDisconnect(client)
 				return
@@ -76,9 +78,11 @@ func Init() {
 			}
 
 			room := fmt.Sprint(int64(personIDFloat))
+			log.Println(prefix, "joining room", room)
 			client.Join(socket.Room(room))
 		})
 		_ = client.On("disconnect", func(...any) {
+			log.Println(prefix, "disconnect")
 			leaveAllAndDisconnect(client)
 		})
 	})
