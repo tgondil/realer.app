@@ -56,7 +56,7 @@ const Home: React.FC<HomeProps> = ({ token }) => {
     <Grid
       container
       spacing={2}
-      style={{ backgroundColor: "rgb(11, 13, 14)", height: "100vh" }}
+      style={{ backgroundColor: "rgb(11, 13, 14)", height: "100vh", overflow: "clip" }}
     >
       <Grid item xs={4}>
         <Slider onFriendClick={handleChatClick} chats={chats} />
