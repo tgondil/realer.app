@@ -1,19 +1,10 @@
 import React from "react";
 import { useState } from "react";
 
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-import TextField from "@mui/material/TextField";
 import TopBar from "./topBar";
 
 import "./slider.css";
-import { friends } from "../../dummy_data/users"; // Assuming friendsMap is imported from your data file
 import { Chat } from "../../types/types";
-
-interface Friend {
-  id: number;
-  name: string;
-}
 
 interface SliderProps {
   onFriendClick: (id: number) => void;
@@ -23,20 +14,16 @@ interface SliderProps {
 const Slider: React.FC<SliderProps> = ({ onFriendClick, chats }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filterFriends = (
-    query: string,
-    friendsMap: Record<number, Friend>,
-  ): Friend[] => {
-    const friendsArray = Object.values(friendsMap); // Convert map to array
+  const filterChats = (query: string, chats: Chat[]): Chat[] => {
     if (!query) {
-      return friendsArray;
+      return chats;
     }
-    return friendsArray.filter((friend) =>
-      friend.name.toLowerCase().includes(query.toLowerCase()),
+    return chats.filter((chat) =>
+      chat.PersonName.toLowerCase().includes(query.toLowerCase()),
     );
   };
 
-  const filteredFriends: Friend[] = filterFriends(searchQuery, friends);
+  const filteredChats: Chat[] = filterChats(searchQuery, chats);
 
   return (
     <div className="container">
@@ -50,13 +37,13 @@ const Slider: React.FC<SliderProps> = ({ onFriendClick, chats }) => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        {chats.map((chat) => (
+        {filteredChats.map((chat) => (
           <div
-            key={chat.chatID}
+            key={chat.ChatID}
             className="friend-item"
-            onClick={() => onFriendClick(chat.personID)}
+            onClick={() => onFriendClick(chat.PersonID)}
           >
-            <p>{chat.personName}</p>
+            <p> {chat.PersonName} </p>
           </div>
         ))}
       </div>

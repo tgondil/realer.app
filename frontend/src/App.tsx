@@ -11,7 +11,6 @@ import Chat from "./components/chat/chat";
 import Login from "./components/login/login";
 import Home from "./components/home/home";
 
-import { messagesMap } from "./dummy_data/users";
 import { useState } from "react";
 import { Message } from "./types/types";
 //npm install @mui/material @emotion/react @emotion/styled
@@ -29,12 +28,6 @@ function App() {
 
   const onRegisterSuccess = (newToken: string) => {
     setToken(newToken);
-  };
-
-  const handleFriendClick = (id: number) => {
-    setSelectedFriendId(id);
-    const chatToDisplay = messagesMap[id];
-    setSelectedChat(chatToDisplay);
   };
 
   return (

@@ -1,4 +1,4 @@
-export const getMessages = async (token: string) => {
+export const getChats = async (token: string) => {
   try {
     const response = await fetch("http://localhost:8080/chats", {
       method: "GET",

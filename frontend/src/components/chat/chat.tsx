@@ -1,7 +1,7 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import "./chat.css";
 import { Message } from "../../types/types";
-import { friends } from "../../dummy_data/users";
 import MessageBar from "../messageBar/messageBar";
 import Grid from "@mui/material/Grid";
 import { Slider } from "@mui/material";
@@ -12,8 +12,7 @@ import { alpha, styled } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
-
-import { messagesMap } from "../../dummy_data/users";
+import { getChat } from "../../apis/getChat";
 
 const CssTextField = styled(TextField)({
   "& label.Mui-focused": {
@@ -36,26 +35,45 @@ const CssTextField = styled(TextField)({
 });
 
 interface ChatProps {
-  messages: Message[];
   receiverId: number;
+  token: string;
 }
 
-const Chat: React.FC<ChatProps> = ({ messages, receiverId }) => {
+const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const chatMessages = await getChat(token, receiverId); // Use token in API call
+        setMessages(chatMessages);
+      } catch (error) {
+        console.error("Error fetching chat messages:", error);
+      }
+    };
+
+    if (receiverId !== null) {
+      fetchMessages();
+    }
+  }, [token, receiverId]); // Add token as a dependency
+
   return (
     <div className="chat">
       <div className="chat-header">
         <img
           className="friend-image"
           src={`https://i.pravatar.cc/150?img=${receiverId}`}
-          alt={friends[receiverId].name}
+          alt={receiverId.toString()}
         />
-        <h1 className="header"> {friends[receiverId].name} </h1>
+        <h1 className="header"> {receiverId} </h1>
       </div>
       <div className="chat-messages">
         {messages.map((message) => (
           <div
             key={message.messageId}
-            className={`message ${message.isSenderYou ? "sent" : "received"}`}
+            className={`message ${
+              message.fromPersonID !== receiverId ? "sent" : "received"
+            }`}
           >
             <p className="font"> {message.content} </p>
           </div>

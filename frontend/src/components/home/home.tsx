@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid";
 import Slider from "../slider/slider";
 import Chat from "../chat/chat";
 import MessageBar from "../messageBar/messageBar";
-import { getMessages } from "../../apis/getMessages"; // Assuming you have a fetchChats API function
+import { getChats } from "../../apis/getChats"; // Assuming you have a fetchChats API function
 
 interface HomeProps {
   token: string;
@@ -11,13 +11,12 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = ({ token }) => {
   const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
-  // const [selectedChat, setSelectedChat] = useState<Message[]>([]);
   const [chats, setChats] = useState([]); // State to store chat data
 
   useEffect(() => {
     const loadChats = async () => {
       try {
-        const chatData = await getMessages(token); // Fetch chat data
+        const chatData = await getChats(token); // Fetch chat data
         setChats(chatData);
       } catch (error) {
         console.error("Error fetching chats:", error);
@@ -28,8 +27,9 @@ const Home: React.FC<HomeProps> = ({ token }) => {
 
   const handleFriendClick = (id: number) => {
     setSelectedFriendId(id);
-    //const chatToDisplay = messagesMap[id]; // Update this to use real chat data
-    //setSelectedChat(chatToDisplay);
+
+    // const chatToDisplay = {/* Get chat data for selected friend */};
+    // setSelectedChat(chatToDisplay);
   };
 
   return (
@@ -43,8 +43,7 @@ const Home: React.FC<HomeProps> = ({ token }) => {
       </Grid>
       <Grid item xs={8} style={{ backgroundColor: "rgb(11, 13, 14)" }}>
         {selectedFriendId ? (
-          // <Chat messages={selectedChat} receiverId={selectedFriendId} />
-          <> </>
+          <Chat token={token} receiverId={selectedFriendId} />
         ) : (
           <MessageBar />
         )}
