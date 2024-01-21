@@ -131,7 +131,8 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
           background: "white",
           borderRadius: "50px",
           width: "100%",
-          marginBottom: "0px",
+          marginBottom: "18px",
+          marginTop: "10px",
         }}
         className="bar"
         container
