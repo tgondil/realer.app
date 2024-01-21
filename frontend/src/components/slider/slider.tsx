@@ -8,6 +8,7 @@ import TopBar from "./topBar";
 
 import "./slider.css";
 import { friends } from "../../dummy_data/users"; // Assuming friendsMap is imported from your data file
+import { Chat } from "../../types/types";
 
 interface Friend {
   id: number;
@@ -16,9 +17,10 @@ interface Friend {
 
 interface SliderProps {
   onFriendClick: (id: number) => void;
+  chats: { chatID: number; personID: number; personName: string }[]; // Add type for chats
 }
 
-const Slider: React.FC<SliderProps> = ({ onFriendClick }) => {
+const Slider: React.FC<SliderProps> = ({ onFriendClick, chats }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filterFriends = (
@@ -48,18 +50,13 @@ const Slider: React.FC<SliderProps> = ({ onFriendClick }) => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        {filteredFriends.map((friend) => (
+        {chats.map((chat) => (
           <div
-            key={friend.id}
-            className=" friend-item"
-            onClick={() => onFriendClick(friend.id)}
+            key={chat.chatID}
+            className="friend-item"
+            onClick={() => onFriendClick(chat.personID)}
           >
-            {/* <img
-              className="friend-image"
-              src={`https://i.pravatar.cc/150?img=${friend.id}`}
-              alt={friend.name}
-            /> */}
-            <p>{friend.name}</p>
+            <p>{chat.personName}</p>
           </div>
         ))}
       </div>

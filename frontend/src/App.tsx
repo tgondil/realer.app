@@ -40,7 +40,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<Home token={token} />} />
         <Route
           index
           element={

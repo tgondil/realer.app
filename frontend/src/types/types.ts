@@ -16,5 +16,5 @@ export interface Friend {
 export interface Chat {
   chatID: number;
   personID: number;
-  PErsonName: string;
+  personName: string;
 }
