@@ -63,7 +63,9 @@ func Init() {
 				return
 			}
 			payload := claims["pld"].(map[string]any)
-			_, containsPersonId := payload["personId"]
+			personIDAny, containsPersonId := payload["personId"]
+
+			personIDFloat, containsPersonId := personIDAny.(float64)
 
 			ok = ok && containsPersonId
 
@@ -73,7 +75,7 @@ func Init() {
 				return
 			}
 
-			room := fmt.Sprint(payload["personId"])
+			room := fmt.Sprint(int64(personIDFloat))
 			client.Join(socket.Room(room))
 		})
 		_ = client.On("disconnect", func(...any) {
