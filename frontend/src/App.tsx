@@ -1,15 +1,13 @@
 import { Route, Routes } from "react-router";
-import React from "react";
 import "./App.css";
 import { socket } from "./socket";
 import Login from "./components/login/login";
 import Home from "./components/home/home";
-import { ChatProvider } from "./ChatContext";
-import { useState, useEffect, useRef } from "react";
+
+import { useState, useEffect } from "react";
 
 import Cookies from "js-cookie";
 import { Message } from "./types/types";
-import listenForNewMessages from "./components/home/home";
 
 document.body.style.backgroundColor = "rgb(11, 13, 14)";
 
@@ -19,20 +17,6 @@ function App() {
   const [mapOfUnreadMessagesCount, setMapOfUnreadMessagesCount] = useState<
     Record<number, number>
   >({});
-
-  const [currentChatMessages, setCurrentChatMessages] = useState<Message[]>([]);
-
-  const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
-  const selectedChatIdRef = useRef<number | null>(null);
-  const currentChatMessagesRef = useRef<Message[]>([]);
-
-  useEffect(() => {
-    currentChatMessagesRef.current = currentChatMessages; // Update the ref whenever currentChatMessages changes
-  }, [currentChatMessages]);
-
-  useEffect(() => {
-    selectedChatIdRef.current = selectedChatId; // Update the ref whenever selectedChatId changes
-  }, [selectedChatId]);
 
   useEffect(() => {
     const tokenFromCookie = Cookies.get("token");
@@ -59,8 +43,14 @@ function App() {
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
 
-    listenForNewMessages();
-
+    socket.on("new_message", (message: any) => {
+      const msg: Message = {
+        messageId: message[0].messageID, // Ensure this is a number
+        fromPersonID: parseInt(message[0].fromPerson), // Parse to number if necessary
+        content: message[0].message, // Ensure this is a string
+        timestamp: message[0].timestamp, // Ensure this is a string
+      };
+    });
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -97,7 +87,7 @@ function App() {
   };
 
   return (
-    <ChatProvider>
+    <>
       <Routes>
         <Route path="/home" element={<Home token={token} />} />
         <Route
@@ -110,7 +100,7 @@ function App() {
           }
         />
       </Routes>
-    </ChatProvider>
+    </>
   );
 }
 
