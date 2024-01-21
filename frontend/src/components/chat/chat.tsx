@@ -74,11 +74,11 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
   }, [token, receiverId]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
-    scrollToBottom()
+    scrollToBottom();
   }, [messages]);
 
   const handleKeyPress = async (event: React.KeyboardEvent) => {
@@ -86,9 +86,16 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
       event.preventDefault();
       // Call the API to send the message
       try {
-        await sendMessage(token, receiverId, newMessage); // Replace with your actual API call
+        const response = await sendMessage(token, receiverId, newMessage); // Replace with your actual API call
+        const msg: Message = {
+          messageId: response.messageID,
+          fromPersonID: response.fromPerson,
+          toPersonID: response.toPersonID,
+          content: response.message,
+          createdAt: response.messageTime,
+        };
         setNewMessage(""); // Reset the input field after sending
-        setMessages([...messages, {   messageId: 10, timestamp: Date.now(), content: newMessage, fromPersonID: 0;}]])
+        setMessages([...messages, msg]); // Add the new message to the list of messages
         // Optionally, fetch the latest messages or update the UI
       } catch (error) {
         console.error("Error sending message:", error);
@@ -96,7 +103,7 @@ const Chat: React.FC<ChatProps> = ({ receiverId, token }) => {
     }
   };
 
-  const messagesEndRef =  React.useRef<HTMLInputElement>(null);
+  const messagesEndRef = React.useRef<HTMLInputElement>(null);
 
   return (
     <div className="chat">
