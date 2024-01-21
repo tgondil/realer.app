@@ -4,10 +4,13 @@ import (
 	"backend/constants"
 	"errors"
 	"fmt"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/zishang520/engine.io/v2/types"
 	"github.com/zishang520/socket.io/v2/socket"
 	"log"
+	"net/http"
 	"strings"
 )
 
@@ -16,7 +19,13 @@ var httpServer *types.HttpServer
 
 func Init() {
 	const prefix = "Socket"
-	httpServer = types.NewWebServer(nil)
+	app := chi.NewRouter()
+	app.Use(cors.Handler(cors.Options{
+		AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodHead, http.MethodOptions},
+		AllowedHeaders: []string{"*"},
+	}))
+
+	httpServer = types.NewWebServer(app)
 	io = socket.NewServer(httpServer, nil)
 
 	_ = io.On("connection", func(clients ...any) {
