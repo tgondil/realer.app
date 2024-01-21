@@ -5,7 +5,7 @@ import (
 	"backend/constants"
 	"backend/redisdb"
 	"backend/router"
-	"backend/utilities/cloudflareR2utils"
+	"backend/utilities/s3utils"
 	"log"
 	d "runtime/debug"
 )
@@ -26,6 +26,6 @@ func main() {
 	}()
 	redisdb.Init()
 	socket.Init()
-	cloudflareR2utils.Init()
+	s3utils.Init()
 	router.Init()
 }

@@ -4,7 +4,7 @@ import (
 	"backend/model/auth_token_data"
 	db "backend/redisdb"
 	"backend/utilities/appjson"
-	r2 "backend/utilities/cloudflareR2utils"
+	r2 "backend/utilities/s3utils"
 	"errors"
 	"github.com/go-chi/chi/v5"
 	"log"
@@ -13,6 +13,57 @@ import (
 	"strconv"
 	"strings"
 )
+
+func GetUsers(w http.ResponseWriter, r *http.Request) (e error, statusCode int) {
+	_, containsAuthToken := r.Context().Value("user").(auth_token_data.Model)
+	if !containsAuthToken {
+		return errors.New("Invalid"), 400
+	}
+	res, err := db.GetAllUsers()
+	if err != nil {
+		log.Println(err)
+		return err, 400
+	}
+	var b []byte
+	if b, err = appjson.Marshal(res); err != nil {
+		log.Println(err)
+		return err, 400
+	}
+	_, err = w.Write(b)
+	return err, 400
+}
+
+func GetUser(w http.ResponseWriter, r *http.Request) (e error, statusCode int) {
+	_, containsAuthToken := r.Context().Value("user").(auth_token_data.Model)
+	if !containsAuthToken {
+		return errors.New("Invalid"), 400
+	}
+	var (
+		personIDStr string
+	)
+	personIDRaw := chi.URLParam(r, "otherPersonID")
+	var err error
+	if personIDStr, err = url.QueryUnescape(personIDRaw); err != nil {
+		personIDStr = personIDRaw
+	}
+	personID, err := strconv.ParseInt(personIDStr, 10, 64)
+	if err != nil {
+		return err, 400
+	}
+
+	res, err := db.GetUser(personID)
+	if err != nil {
+		log.Println(err)
+		return err, 400
+	}
+	var b []byte
+	if b, err = appjson.Marshal(res); err != nil {
+		log.Println(err)
+		return err, 400
+	}
+	_, err = w.Write(b)
+	return err, 400
+}
 
 func GetFiles(w http.ResponseWriter, r *http.Request) (e error, statusCode int) {
 	const prefix = "GetFiles"
@@ -53,10 +104,10 @@ func GetSingleChatMessages(w http.ResponseWriter, r *http.Request) (e error, sta
 	var (
 		otherPersonIDStr string
 	)
-	chatIDRaw := chi.URLParam(r, "otherPersonID")
+	otherPersonIDRaw := chi.URLParam(r, "otherPersonID")
 	var err error
-	if otherPersonIDStr, err = url.QueryUnescape(chatIDRaw); err != nil {
-		otherPersonIDStr = chatIDRaw
+	if otherPersonIDStr, err = url.QueryUnescape(otherPersonIDRaw); err != nil {
+		otherPersonIDStr = otherPersonIDRaw
 	}
 	otherPersonID, err := strconv.ParseInt(otherPersonIDStr, 10, 64)
 	if err != nil {

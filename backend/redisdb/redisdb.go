@@ -8,6 +8,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"log"
 	"slices"
+	"strconv"
 )
 
 var client *redis.Client
@@ -40,11 +41,15 @@ func CreatePerson(name, password string) (int64, error) {
 	if e1 := cmd.Err(); e1 != nil {
 		return 0, e1
 	}
-	cmd = client.HSet(ctx, fmt.Sprintf("person:%d", personID), "password", password)
+	cmd = client.HSet(ctx, fmt.Sprintf("person:%d", personID), "password", password, "name", name)
 	if e1 := cmd.Err(); e1 != nil {
 		return 0, e1
 	}
 	return personID, nil
+}
+
+func GetPersonFromID(personID int64) (string, error) {
+	return client.HGet(ctx, fmt.Sprintf("person:%d", personID), "name").Result()
 }
 
 func PersonExists(name string) bool {
@@ -117,6 +122,39 @@ func GetAllChats(personID int64) ([]common_models.ChatDBModel, error) {
 	return m, nil
 }
 
+func GetAllUsers() ([]common_models.PersonDBModel, error) {
+	cmd := client.HGetAll(ctx, "persons")
+	if e1 := cmd.Err(); e1 != nil {
+		return nil, e1
+	}
+	m := make([]common_models.PersonDBModel, 0, 1024)
+	for k, v := range cmd.Val() {
+		val, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		newM := common_models.PersonDBModel{
+			PersonName: k,
+			PersonID:   val,
+		}
+		m = append(m, newM)
+	}
+	return m, nil
+}
+func GetUser(personID int64) (*common_models.PersonDBModel, error) {
+	cmd := client.HGet(ctx, fmt.Sprintf("person:%d", personID), "name")
+	if e1 := cmd.Err(); e1 != nil {
+		return nil, e1
+	}
+
+	newM := &common_models.PersonDBModel{
+		PersonName: cmd.Val(),
+		PersonID:   personID,
+	}
+
+	return newM, nil
+}
+
 func ChatExists(person1, person2 int64) bool {
 	var minPersonID, maxPersonID int64
 	if person1 < person2 {
@@ -135,17 +173,25 @@ func ChatExists(person1, person2 int64) bool {
 }
 
 func CreateChat(person1, person2, nowTimestamp int64) (chatID int64, err error) {
+	var chatModel1, chatModel2 common_models.ChatDBModel
+	chatModel1.PersonID = person1
+	chatModel1.PersonName, err = GetPersonFromID(person1)
+	if err != nil {
+		return 0, err
+	}
+	chatModel2.PersonID = person2
+	chatModel2.PersonName, err = GetPersonFromID(person2)
+	if err != nil {
+		return 0, err
+	}
+
 	cmd := client.Incr(ctx, "chatIDCount")
 	if e1 := cmd.Err(); e1 != nil {
 		return 0, e1
 	}
 	chatID = cmd.Val()
-	var chatModel1, chatModel2 common_models.ChatDBModel
 	chatModel1.ChatID = chatID
-	chatModel1.ForPersonID = person1
 	chatModel2.ChatID = chatID
-	chatModel2.ForPersonID = person2
-
 	cmd = client.HSet(ctx, fmt.Sprintf("chats:%d", person1), chatModel1.ChatID, chatModel1)
 	if e1 := cmd.Err(); e1 != nil {
 		return 0, e1
