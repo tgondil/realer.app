@@ -129,12 +129,12 @@ func SendMessageWithFile(w http.ResponseWriter, r *http.Request) (e error, statu
 		MessageID:    0,
 		Timestamp:    nowTime.Format(time.DateTime),
 		MessageAudio: fileNameString,
-		Reaction:     "",
+		TextReaction: "",
 	}
 	if !redisdb.ChatExists(authTokenData.PersonID, toPersonID) {
-		//if err = redisdb.CreateChat(authTokenData.PersonID, toPersonID); err != nil {
-		//
-		//}
+		if _, err = redisdb.CreateChat(authTokenData.PersonID, toPersonID, nowTime.UnixMilli()); err != nil {
+			return err, 400
+		}
 		socket.Broadcast([]int64{authTokenData.PersonID, toPersonID, authTokenData.PersonID}, "new_chat", fmt.Sprintf("%d,%d", authTokenData.PersonID, toPersonID))
 	}
 	err = redisdb.AddMessage(authTokenData.PersonID, toPersonID, &redisM)
@@ -170,15 +170,15 @@ func SendMessage(w http.ResponseWriter, r *http.Request) (e error, statusCode in
 	var nowTime = time.Now()
 
 	redisM := common_models.MessageDBModel{
-		MessageID:   0,
-		Timestamp:   nowTime.Format(time.DateTime),
-		MessageText: body.Message,
-		Reaction:    "",
+		MessageID:    0,
+		Timestamp:    nowTime.Format(time.DateTime),
+		MessageText:  body.Message,
+		TextReaction: "",
 	}
 	if !redisdb.ChatExists(authTokenData.PersonID, body.ToPersonID) {
-		//if err = redisdb.CreateChat(authTokenData.PersonID, toPersonID); err != nil {
-		//
-		//}
+		if _, err = redisdb.CreateChat(authTokenData.PersonID, body.ToPersonID, nowTime.UnixMilli()); err != nil {
+			return err, 400
+		}
 		socket.Broadcast([]int64{authTokenData.PersonID, body.ToPersonID, authTokenData.PersonID}, "new_chat", fmt.Sprintf("%d,%d", authTokenData.PersonID, body.ToPersonID))
 	}
 	err = redisdb.AddMessage(authTokenData.PersonID, body.ToPersonID, &redisM)
@@ -197,7 +197,36 @@ func SendMessage(w http.ResponseWriter, r *http.Request) (e error, statusCode in
 	return err, 400
 }
 
-func AddReactionToMessage(w http.ResponseWriter, r *http.Request) (e error, statusCode int) {
+func AddReactionToAudio(w http.ResponseWriter, r *http.Request) (e error, statusCode int) {
+	authTokenData, containsAuthToken := r.Context().Value("user").(auth_token_data.Model)
+	if !containsAuthToken {
+		return errors.New("Invalid"), 400
+	}
+
+	body := new(struct {
+		MessageID  int64 `json:"messageID"`
+		ToPersonID int64 `json:"toPersonID"`
+		Reaction   []common_models.ReactionDBModel
+	})
+
+	err := appjson.UnmarshalRequestBody(r.Body, body)
+	if err != nil {
+		return err, 400
+	}
+
+	if err = redisdb.AddReactionToAudio(authTokenData.PersonID, body.ToPersonID, body.MessageID, body.Reaction); err != nil {
+		return err, 400
+	}
+	socket.Broadcast([]int64{authTokenData.PersonID, body.ToPersonID, authTokenData.PersonID}, "audio_reaction", common_models.SocketAndResponseModel{
+		MessageID:     body.MessageID,
+		AudioReaction: body.Reaction,
+	})
+	_, err = w.Write([]byte("success"))
+	return err, 400
+
+}
+
+func AddReactionToText(w http.ResponseWriter, r *http.Request) (e error, statusCode int) {
 	messageIDRaw := chi.URLParam(r, "messageID")
 	queryParams := r.URL.Query()
 
@@ -227,12 +256,12 @@ func AddReactionToMessage(w http.ResponseWriter, r *http.Request) (e error, stat
 	if !containsAuthToken {
 		return errors.New("Invalid"), 400
 	}
-	if err = redisdb.AddReaction(authTokenData.PersonID, toPersonID, messageID, reaction); err != nil {
+	if err = redisdb.AddReactionToText(authTokenData.PersonID, toPersonID, messageID, reaction); err != nil {
 		return err, 400
 	}
-	socket.Broadcast([]int64{authTokenData.PersonID, toPersonID, authTokenData.PersonID}, "new_reaction", common_models.SocketAndResponseModel{
-		MessageID: messageID,
-		Reaction:  reaction,
+	socket.Broadcast([]int64{authTokenData.PersonID, toPersonID, authTokenData.PersonID}, "text_reaction", common_models.SocketAndResponseModel{
+		MessageID:    messageID,
+		TextReaction: reaction,
 	})
 	_, err = w.Write([]byte("success"))
 	return err, 400

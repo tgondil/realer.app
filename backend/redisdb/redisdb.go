@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"github.com/redis/go-redis/v9"
 	"log"
+	"slices"
 )
 
 var client *redis.Client
+var Close func() error
 var ctx = context.Background()
 
 func Init() {
@@ -19,6 +21,7 @@ func Init() {
 		panic(err)
 	}
 	client = redis.NewClient(opt)
+	Close = client.Close
 }
 
 func CreatePerson(name, password string) (int64, error) {
@@ -92,6 +95,9 @@ func GetAllMessages(person1, person2 int64) ([]common_models.MessageDBModel, err
 		}
 		m = append(m, *newM)
 	}
+	slices.SortFunc(m, func(i, j common_models.MessageDBModel) int {
+		return int(i.MessageID - j.MessageID)
+	})
 	return m, nil
 }
 
@@ -128,26 +134,23 @@ func ChatExists(person1, person2 int64) bool {
 	return res != 0
 }
 
-func CreateChat(person1, person2 int64) (chatID int64, err error) {
+func CreateChat(person1, person2, nowTimestamp int64) (chatID int64, err error) {
 	cmd := client.Incr(ctx, "chatIDCount")
 	if e1 := cmd.Err(); e1 != nil {
 		return 0, e1
 	}
-	chatID, e2 := cmd.Result()
-	if e2 != nil {
-		return 0, e2
-	}
+	chatID = cmd.Val()
 	var chatModel1, chatModel2 common_models.ChatDBModel
 	chatModel1.ChatID = chatID
 	chatModel1.ForPersonID = person1
 	chatModel2.ChatID = chatID
 	chatModel2.ForPersonID = person2
 
-	cmd = client.HSet(ctx, fmt.Sprintf("chats:%d", person1), chatModel1)
+	cmd = client.HSet(ctx, fmt.Sprintf("chats:%d", person1), chatModel1.ChatID, chatModel1)
 	if e1 := cmd.Err(); e1 != nil {
 		return 0, e1
 	}
-	cmd = client.HSet(ctx, fmt.Sprintf("chats:%d", person2), chatModel2)
+	cmd = client.HSet(ctx, fmt.Sprintf("chats:%d", person2), chatModel2.ChatID, chatModel2)
 	if e1 := cmd.Err(); e1 != nil {
 		return 0, e1
 	}
@@ -155,23 +158,61 @@ func CreateChat(person1, person2 int64) (chatID int64, err error) {
 }
 
 func AddMessage(fromPersonID, toPersonID int64, message *common_models.MessageDBModel) error {
-	// auto increment messageID
+	var minPersonID, maxPersonID int64
+	if fromPersonID < toPersonID {
+		minPersonID = fromPersonID
+		maxPersonID = toPersonID
+	} else {
+		minPersonID = toPersonID
+		maxPersonID = fromPersonID
+	}
 	cmd := client.Incr(ctx, "messageIDCount")
 	e1 := cmd.Err()
 	if e1 != nil {
 		return e1
 	}
-	message.MessageID, e1 = cmd.Result()
-	if e1 != nil {
+	message.MessageID = cmd.Val()
+	return client.HSet(ctx, fmt.Sprintf("messages:%d_%d", minPersonID, maxPersonID), message.MessageID, message).Err()
+}
+
+func AddReactionToText(fromPersonID, toPersonID, messageID int64, reaction string) error {
+	var minPersonID, maxPersonID int64
+	if fromPersonID < toPersonID {
+		minPersonID = fromPersonID
+		maxPersonID = toPersonID
+	} else {
+		minPersonID = toPersonID
+		maxPersonID = fromPersonID
+	}
+	r := client.HGet(ctx, fmt.Sprintf("messages:%d_%d", minPersonID, maxPersonID), fmt.Sprint(messageID))
+	if e1 := r.Err(); e1 != nil {
 		return e1
 	}
-	return client.HSet(ctx, fmt.Sprintf("messages:%d_%d", fromPersonID, toPersonID), message.MessageID, message).Err()
+	newM := &common_models.MessageDBModel{}
+	if err := appjson.Unmarshal([]byte(r.Val()), newM); err != nil {
+		return err
+	}
+	newM.TextReaction = reaction
+	return client.HSet(ctx, fmt.Sprintf("messages:%d_%d", minPersonID, maxPersonID), messageID, newM).Err()
 }
 
-func AddReaction(fromPersonID, toPersonID, messageID int64, reaction string) error {
-	return client.HSet(ctx, fmt.Sprintf("messages:%d_%d", fromPersonID, toPersonID), messageID, reaction).Err()
-}
-
-func Close() error {
-	return client.Close()
+func AddReactionToAudio(fromPersonID, toPersonID, messageID int64, reactions []common_models.ReactionDBModel) error {
+	var minPersonID, maxPersonID int64
+	if fromPersonID < toPersonID {
+		minPersonID = fromPersonID
+		maxPersonID = toPersonID
+	} else {
+		minPersonID = toPersonID
+		maxPersonID = fromPersonID
+	}
+	r := client.HGet(ctx, fmt.Sprintf("messages:%d_%d", minPersonID, maxPersonID), fmt.Sprint(messageID))
+	if e1 := r.Err(); e1 != nil {
+		return e1
+	}
+	newM := &common_models.MessageDBModel{}
+	if err := appjson.Unmarshal([]byte(r.Val()), newM); err != nil {
+		return err
+	}
+	newM.AudioReaction = reactions
+	return client.HSet(ctx, fmt.Sprintf("messages:%d_%d", minPersonID, maxPersonID), messageID, newM).Err()
 }

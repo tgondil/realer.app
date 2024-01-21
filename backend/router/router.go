@@ -54,7 +54,8 @@ func Init() {
 		r.Get("/chats", CustomHandler(request_handler.GetChats))
 		r.Post("/sendMessageWithFile", CustomHandler(request_handler.SendMessageWithFile))
 		r.Post("/sendMessage", CustomHandler(request_handler.SendMessage))
-		r.Post("/addReaction/{messageID}", CustomHandler(request_handler.AddReactionToMessage))
+		r.Post("/addReactionToText/{messageID}", CustomHandler(request_handler.AddReactionToText))
+		r.Post("/addReactionToAudio", CustomHandler(request_handler.AddReactionToAudio))
 	})
 
 	server := &http.Server{
