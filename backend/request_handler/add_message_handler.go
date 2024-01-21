@@ -109,6 +109,7 @@ func SendMessageWithFile(w http.ResponseWriter, r *http.Request) (e error, statu
 	}
 
 	redisM := common_models.MessageDBModel{
+		FromPersonID:         authTokenData.PersonID,
 		MessageID:            0,
 		Timestamp:            nowTime.Format(time.DateTime),
 		MessageAudio:         fileNameString,
@@ -154,6 +155,7 @@ func SendMessage(w http.ResponseWriter, r *http.Request) (e error, statusCode in
 	var nowTime = time.Now()
 
 	redisM := common_models.MessageDBModel{
+		FromPersonID: authTokenData.PersonID,
 		MessageID:    0,
 		Timestamp:    nowTime.Format(time.DateTime),
 		MessageText:  body.Message,

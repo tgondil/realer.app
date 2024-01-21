@@ -26,8 +26,9 @@ func NewSendMessageRequestModel() *SendMessageRequestModel {
 
 type MessageDBModel struct {
 	MessageID            int64             `json:"messageID"`
+	FromPersonID         int64             `json:"fromPersonID"`
 	Timestamp            string            `json:"timestamp,omitempty"`
-	MessageText          string            `json:"messageText,omitempty"`
+	MessageText          string            `json:"content,omitempty"`
 	TextReaction         string            `json:"textReaction,omitempty"`
 	MessageAudio         string            `json:"audioPath,omitempty"`
 	AudioLengthInSeconds int64             `json:"audioLengthInSeconds,omitempty"`
