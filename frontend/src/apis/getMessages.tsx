@@ -6,6 +6,7 @@ export const getMessages = async (token: string) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      body: null,
     });
 
     if (!response.ok) {

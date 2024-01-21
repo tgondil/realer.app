@@ -17,7 +17,7 @@ interface Friend {
 
 interface SliderProps {
   onFriendClick: (id: number) => void;
-  chats: { chatID: number; personID: number; personName: string }[]; // Add type for chats
+  chats: Chat[]; // Add type for chats
 }
 
 const Slider: React.FC<SliderProps> = ({ onFriendClick, chats }) => {
