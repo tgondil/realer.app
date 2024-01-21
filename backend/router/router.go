@@ -42,21 +42,7 @@ func Init() {
 	app.Use(middleware.Timeout(20 * time.Second))
 	app.Use(middleware.RequestSize(55 << 20)) // 55 MB
 
-	app.Get("/", CustomHandler(func(writer http.ResponseWriter, request *http.Request) (error, int) {
-		//request.URL.Host = strings.Split((r.URL.Host), ".")[0]
-		writer.Header().Set("Content-Type", "text/html")
-		_, err := writer.Write([]byte("<CENTER><H1>Hello world</H1></CENTER>"))
-		return err, 400
-	}))
-
-	/*app.Get("/getCurrentUTCTime", CustomHandler(func(writer http.ResponseWriter, request *http.Request) (error, int) {
-		_, err := writer.Write([]byte(time.Now().UTC().Format(time.DateTime)))
-		return err,400
-	}))*/
-
-	app.Get("/files/+", CustomHandler(func(writer http.ResponseWriter, request *http.Request) (error, int) {
-		return request_handler.GetFiles(writer, request)
-	}))
+	app.Get("/files/*", CustomHandler(request_handler.GetFiles))
 
 	app.Post("/login", CustomHandler(auth_handler.Login))
 	app.Post("/signUp", CustomHandler(auth_handler.Signup))
@@ -64,10 +50,11 @@ func Init() {
 	//user auth middleware
 	app.Group(func(r chi.Router) {
 		r.Use(appmiddleware.AuthMiddleware)
-		r.Post("/chatMessages/:otherPersonID", CustomHandler(request_handler.GetSingleChatMessages))
-		r.Post("/chats", CustomHandler(request_handler.GetChats))
+		r.Get("/chatMessages/{otherPersonID}", CustomHandler(request_handler.GetSingleChatMessages))
+		r.Get("/chats", CustomHandler(request_handler.GetChats))
 		r.Post("/sendMessageWithFile", CustomHandler(request_handler.SendMessageWithFile))
-		r.Post("/addReaction/:messageID", CustomHandler(request_handler.AddReactionToMessage))
+		r.Post("/sendMessage", CustomHandler(request_handler.SendMessage))
+		r.Post("/addReaction/{messageID}", CustomHandler(request_handler.AddReactionToMessage))
 	})
 
 	server := &http.Server{

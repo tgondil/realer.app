@@ -81,7 +81,7 @@ func Init() {
 		})
 	})
 	fmt.Println("socket http started")
-	httpServer.Listen(":3000", nil)
+	httpServer.Listen(":4000", nil)
 	constants.SocketInitialised = true
 }
 

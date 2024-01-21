@@ -85,32 +85,14 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 		_, containsPersonId := payload["personId"]
-		_, containsSubsId := payload["subsId"]
-		isActive, containsIsActive := payload["isActive"]
-		isDoctorStaff, containsIsDoctorStaff := payload["isDoctorStaff"]
 
-		ok = ok && containsPersonId && containsSubsId && containsIsActive && containsIsDoctorStaff
+		ok = ok && containsPersonId
 
 		if !(ok && token.Valid) {
 			w.WriteHeader(statusUnauthorized)
 			_, _ = w.Write([]byte(authRejectionMessage))
 			return
 		}
-
-		isActiveBool, ok := isActive.(bool)
-		if !ok || !isActiveBool {
-			w.WriteHeader(statusUnauthorized)
-			_, _ = w.Write([]byte("Invalid login: inactive user"))
-			return
-		}
-
-		isDoctorStaffBool, ok := isDoctorStaff.(bool)
-		if !ok || !isDoctorStaffBool {
-			w.WriteHeader(statusUnauthorized)
-			_, _ = w.Write([]byte("Invalid login: Not a user"))
-			return
-		}
-
 		if expiry, err := claims.GetExpirationTime(); err != nil {
 			w.WriteHeader(statusUnauthorized)
 			_, _ = w.Write([]byte("Invalid expiration"))

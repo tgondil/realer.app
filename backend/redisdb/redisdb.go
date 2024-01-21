@@ -13,7 +13,7 @@ var client *redis.Client
 var ctx = context.Background()
 
 func Init() {
-	opt, err := redis.ParseURL("redis://default:boilermake2024@redis-12496.c323.us-east-1-2.ec2.cloud.redislabs.com:12496/1")
+	opt, err := redis.ParseURL("redis://default:boilermake2024@redis-12496.c323.us-east-1-2.ec2.cloud.redislabs.com:12496/0")
 	if err != nil {
 		log.Println(err)
 		panic(err)

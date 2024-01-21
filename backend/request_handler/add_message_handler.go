@@ -5,6 +5,7 @@ import (
 	"backend/model/auth_token_data"
 	"backend/model/common_models"
 	"backend/redisdb"
+	"backend/utilities/appjson"
 	r2 "backend/utilities/cloudflareR2utils"
 	"bytes"
 	"errors"
@@ -149,6 +150,49 @@ func SendMessageWithFile(w http.ResponseWriter, r *http.Request) (e error, statu
 		MessageTime:            nowTime.UnixMilli(),
 	}
 	socket.Broadcast([]int64{authTokenData.PersonID, toPersonID, authTokenData.PersonID}, "new_message", m)
+	_, err = w.Write([]byte("success"))
+	return err, 400
+}
+
+func SendMessage(w http.ResponseWriter, r *http.Request) (e error, statusCode int) {
+	ctx := r.Context()
+	authTokenData, containsAuthToken := ctx.Value("user").(auth_token_data.Model)
+	if !containsAuthToken {
+		return errors.New("Invalid"), 400
+	}
+
+	body := common_models.NewSendMessageRequestModel()
+	err := appjson.UnmarshalRequestBody(r.Body, body)
+	if err != nil {
+		return err, 400
+	}
+
+	var nowTime = time.Now()
+
+	redisM := common_models.MessageDBModel{
+		MessageID:   0,
+		Timestamp:   nowTime.Format(time.DateTime),
+		MessageText: body.Message,
+		Reaction:    "",
+	}
+	if !redisdb.ChatExists(authTokenData.PersonID, body.ToPersonID) {
+		//if err = redisdb.CreateChat(authTokenData.PersonID, toPersonID); err != nil {
+		//
+		//}
+		socket.Broadcast([]int64{authTokenData.PersonID, body.ToPersonID, authTokenData.PersonID}, "new_chat", fmt.Sprintf("%d,%d", authTokenData.PersonID, body.ToPersonID))
+	}
+	err = redisdb.AddMessage(authTokenData.PersonID, body.ToPersonID, &redisM)
+	if err != nil {
+		return err, 400
+	}
+	m := common_models.SocketAndResponseModel{
+		FromPersonID: authTokenData.PersonID,
+		ToPersonID:   body.ToPersonID,
+		MessageID:    redisM.MessageID,
+		Message:      body.Message,
+		MessageTime:  nowTime.UnixMilli(),
+	}
+	socket.Broadcast([]int64{authTokenData.PersonID, body.ToPersonID, authTokenData.PersonID}, "new_message", m)
 	_, err = w.Write([]byte("success"))
 	return err, 400
 }

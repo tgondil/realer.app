@@ -21,7 +21,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) (e error, statusCode int) 
 		b        []byte
 		filePath string
 	)
-	filePathRaw := chi.URLParam(r, "+")
+	filePathRaw := chi.URLParam(r, "*")
 	var err error
 	if filePath, err = url.QueryUnescape(filePathRaw); err != nil {
 		filePath = filePathRaw
@@ -63,7 +63,9 @@ func GetSingleChatMessages(w http.ResponseWriter, r *http.Request) (e error, sta
 		return err, 400
 	}
 	res, err := db.GetAllMessages(authToken.PersonID, otherPersonID)
-
+	if err != nil {
+		return err, 400
+	}
 	var b []byte
 	if b, err = appjson.Marshal(res); err != nil {
 		log.Println(err)
