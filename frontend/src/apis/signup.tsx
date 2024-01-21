@@ -1,6 +1,6 @@
 export const signup = async (name: string, password: string) => {
   try {
-    const response = await fetch("http://localhost:8080/signUp", {
+    const response = await fetch("http://44.221.67.84:8080/signUp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
