@@ -50,10 +50,11 @@ function App() {
       console.log(message);
       const msg: Message = {
         messageId: message[0].messageID,
-        fromPersonID: parseInt(message[0].fromPerson),
+        fromPersonID: message[0].fromPerson,
         content: message[0].message,
         timestamp: message[0].timestamp,
       };
+      console.log(msg)
 
       console.log("I'm here", selectedChatId);
       if (msg.fromPersonID === selectedChatId) {
