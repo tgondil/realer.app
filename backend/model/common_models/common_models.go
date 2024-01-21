@@ -15,9 +15,10 @@ type SocketAndResponseModel struct {
 }
 
 type SendMessageRequestModel struct {
-	ToPersonID int64  `json:"id"`
-	AudioBytes []byte `json:"audio"`
-	Message    string `json:"content"`
+	ToPersonID  int64  `json:"id"`
+	AudioBytes  []byte `json:"audio,omitempty"`
+	AudioLength *int64 `json:"audioLength,omitempty"`
+	Message     string `json:"content,omitempty"`
 }
 
 func NewSendMessageRequestModel() *SendMessageRequestModel {

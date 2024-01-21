@@ -7,23 +7,15 @@ import (
 	"backend/redisdb"
 	"backend/utilities/appjson"
 	s3 "backend/utilities/s3utils"
-	"bytes"
 	"errors"
 	"fmt"
 	"github.com/go-chi/chi/v5"
-	"io"
-	"mime/multipart"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 )
-
-var filePool = sync.Pool{
-	New: func() any { return new(bytes.Buffer) },
-}
 
 func SendMessageWithFile(w http.ResponseWriter, r *http.Request) (e error, statusCode int) {
 	ctx := r.Context()
@@ -32,79 +24,26 @@ func SendMessageWithFile(w http.ResponseWriter, r *http.Request) (e error, statu
 		return errors.New("Invalid"), 400
 	}
 
-	err := r.ParseMultipartForm(55 << 20)
+	body := common_models.NewSendMessageRequestModel()
+	err := appjson.UnmarshalRequestBody(r.Body, body)
 	if err != nil {
 		return err, 400
 	}
-
-	var (
-		form = r.MultipartForm
-	)
-
-	if len(form.File) == 0 {
-		return errors.New("No files"), 400
+	if body.AudioBytes == nil {
+		return errors.New("Invalid audio"), 400
 	}
-
-	var (
-		files                       []*multipart.FileHeader
-		tempSlice                   []string
-		toPersonID                  int64
-		fileNameString, contentType string
-		file                        multipart.File
-		ok                          bool
-		fileLengthInSeconds         int64
-		fileSizeInBytes             int64
-		nowTime                     time.Time
-	)
-
-	if files, ok = form.File["files"]; !ok || len(files) == 0 {
-		return errors.New("No files"), 400
-	}
-	err = nil
 
 	pathBuilder := strings.Builder{}
 	pathBuilder.Grow(35)
 	pathBuilder.WriteString("Chats/AudioFiles/")
-	if tempSlice, ok = form.Value["toPersonID"]; ok && len(tempSlice) > 0 {
-		if tmpInt, parseErr := strconv.ParseInt(tempSlice[0], 10, 64); err != nil {
-			return parseErr, 400
-		} else {
-			toPersonID = tmpInt
-		}
-	}
-	if tempSlice, ok = form.Value["audioLength"]; ok && len(tempSlice) > 0 {
-		if tmpInt, parseErr := strconv.ParseInt(tempSlice[0], 10, 64); err != nil {
-			return parseErr, 400
-		} else {
-			fileLengthInSeconds = tmpInt
-		}
-	}
-
-	fileBytes := filePool.Get().(*bytes.Buffer)
-	defer func() {
-		fileBytes.Reset()
-		filePool.Put(fileBytes)
-	}()
-	formFile := files[0]
-
-	fileBytes.Reset()
-	fileSizeInBytes = formFile.Size >> 10
-	nowTime = time.Now()
+	pathBuilder.WriteString(fmt.Sprint(body.ToPersonID))
+	nowTime := time.Now()
 	pathBuilder.WriteString(fmt.Sprint(nowTime.UnixMilli()))
-	pathBuilder.WriteString("_")
-	pathBuilder.WriteString(formFile.Filename)
-	fileNameString = pathBuilder.String()
-	contentType = s3.GetContentType(formFile.Filename)
+	pathBuilder.WriteString(".webm")
+	fileNameString := pathBuilder.String()
+	contentType := "application/octet-stream"
 
-	if file, err = formFile.Open(); err != nil {
-		_ = file.Close()
-		return err, 400
-	} else if _, err = io.Copy(fileBytes, file); err != nil {
-		_ = file.Close()
-		return err, 400
-	}
-	_ = file.Close()
-	if err = s3.UploadBytes(fileBytes.Bytes(), fileNameString, contentType); err != nil {
+	if err = s3.UploadBytes(body.AudioBytes, fileNameString, contentType); err != nil {
 		return err, 400
 	}
 
@@ -113,27 +52,27 @@ func SendMessageWithFile(w http.ResponseWriter, r *http.Request) (e error, statu
 		MessageID:            0,
 		Timestamp:            nowTime.Format(time.DateTime),
 		MessageAudio:         fileNameString,
-		AudioLengthInSeconds: fileLengthInSeconds,
+		AudioLengthInSeconds: *body.AudioLength,
 		TextReaction:         "",
 	}
-	if !redisdb.ChatExists(authTokenData.PersonID, toPersonID) {
-		if _, err = redisdb.CreateChat(authTokenData.PersonID, toPersonID, nowTime.UnixMilli()); err != nil {
+	if !redisdb.ChatExists(authTokenData.PersonID, body.ToPersonID) {
+		if _, err = redisdb.CreateChat(authTokenData.PersonID, body.ToPersonID, nowTime.UnixMilli()); err != nil {
 			return err, 400
 		}
 	}
-	err = redisdb.AddMessage(authTokenData.PersonID, toPersonID, &redisM)
+	err = redisdb.AddMessage(authTokenData.PersonID, body.ToPersonID, &redisM)
 	if err != nil {
 		return err, 400
 	}
 	m := common_models.SocketAndResponseModel{
 		FromPersonID:           authTokenData.PersonID,
-		ToPersonID:             toPersonID,
+		ToPersonID:             body.ToPersonID,
 		MessageID:              redisM.MessageID,
 		MessageFile:            fileNameString,
-		MessageFileSizeInBytes: fileSizeInBytes,
+		MessageFileSizeInBytes: int64(len(body.AudioBytes) >> 10),
 		MessageTime:            nowTime.Format(time.DateTime),
 	}
-	socket.Broadcast([]int64{toPersonID}, "new_message", m)
+	socket.Broadcast([]int64{body.ToPersonID}, "new_message", m)
 	b, err := appjson.Marshal(m)
 	if err != nil {
 		return err, 400
