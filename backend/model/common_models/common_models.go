@@ -35,13 +35,22 @@ type MessageDBModel struct {
 }
 
 type ChatDBModel struct {
-	ChatID     int64  `json:"chatID"`
-	PersonID   int64  `json:"personID"`
-	PersonName string `json:"personName"`
+	ChatID     int64  `redis:"chatID"`
+	PersonID   int64  `redis:"personID"`
+	PersonName string `redis:"personName"`
 }
 
 func (c *ChatDBModel) MarshalBinary() (data []byte, err error) {
-	return appjson.Marshal(c)
+	data, err = appjson.Marshal(struct {
+		ChatID     int64  `json:"chatID"`
+		PersonID   int64  `json:"personID"`
+		PersonName string `json:"personName"`
+	}{
+		ChatID:     c.ChatID,
+		PersonID:   c.PersonID,
+		PersonName: c.PersonName,
+	})
+	return data, err
 }
 
 type PersonDBModel struct {

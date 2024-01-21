@@ -192,11 +192,16 @@ func CreateChat(person1, person2, nowTimestamp int64) (chatID int64, err error) 
 	chatID = cmd.Val()
 	chatModel1.ChatID = chatID
 	chatModel2.ChatID = chatID
-	cmd = client.HSet(ctx, fmt.Sprintf("chats:%d", person1), chatModel1.ChatID, chatModel1)
+	chatModelJson, err := appjson.Marshal(chatModel1)
+	if err != nil {
+		return 0, err
+	}
+	cmd = client.HSet(ctx, fmt.Sprintf("chats:%d", person1), chatModel1.ChatID, chatModelJson)
 	if e1 := cmd.Err(); e1 != nil {
 		return 0, e1
 	}
-	cmd = client.HSet(ctx, fmt.Sprintf("chats:%d", person2), chatModel2.ChatID, chatModel2)
+	chatModelJson, err = appjson.Marshal(chatModel2)
+	cmd = client.HSet(ctx, fmt.Sprintf("chats:%d", person2), chatModel2.ChatID, chatModelJson)
 	if e1 := cmd.Err(); e1 != nil {
 		return 0, e1
 	}
@@ -218,7 +223,11 @@ func AddMessage(fromPersonID, toPersonID int64, message *common_models.MessageDB
 		return e1
 	}
 	message.MessageID = cmd.Val()
-	return client.HSet(ctx, fmt.Sprintf("messages:%d_%d", minPersonID, maxPersonID), message.MessageID, message).Err()
+	messageJson, err := appjson.Marshal(message)
+	if err != nil {
+		return err
+	}
+	return client.HSet(ctx, fmt.Sprintf("messages:%d_%d", minPersonID, maxPersonID), message.MessageID, messageJson).Err()
 }
 
 func AddReactionToText(fromPersonID, toPersonID, messageID int64, reaction string) error {
