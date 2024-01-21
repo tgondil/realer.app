@@ -1,13 +1,15 @@
 import { Route, Routes } from "react-router";
+import React from "react";
 import "./App.css";
 import { socket } from "./socket";
 import Login from "./components/login/login";
 import Home from "./components/home/home";
-
-import { useState, useEffect } from "react";
+import { ChatProvider } from "./ChatContext";
+import { useState, useEffect, useRef } from "react";
 
 import Cookies from "js-cookie";
 import { Message } from "./types/types";
+import listenForNewMessages from "./components/home/home";
 
 document.body.style.backgroundColor = "rgb(11, 13, 14)";
 
@@ -19,7 +21,18 @@ function App() {
   >({});
 
   const [currentChatMessages, setCurrentChatMessages] = useState<Message[]>([]);
+
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
+  const selectedChatIdRef = useRef<number | null>(null);
+  const currentChatMessagesRef = useRef<Message[]>([]);
+
+  useEffect(() => {
+    currentChatMessagesRef.current = currentChatMessages; // Update the ref whenever currentChatMessages changes
+  }, [currentChatMessages]);
+
+  useEffect(() => {
+    selectedChatIdRef.current = selectedChatId; // Update the ref whenever selectedChatId changes
+  }, [selectedChatId]);
 
   useEffect(() => {
     const tokenFromCookie = Cookies.get("token");
@@ -46,24 +59,8 @@ function App() {
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
 
-    socket.on("new_message", (message: any) => {
-      console.log(message);
-      const msg: Message = {
-        messageId: message[0].messageID,
-        fromPersonID: parseInt(message[0].fromPerson),
-        content: message[0].message,
-        timestamp: message[0].timestamp,
-      };
+    listenForNewMessages();
 
-      console.log("I'm here", selectedChatId);
-      if (msg.fromPersonID === selectedChatId) {
-        setCurrentChatMessages((prevMessages) => [...prevMessages, msg]);
-        console.log("new message");
-      } else {
-        console.log("new message but not selected");
-        // ... (update mapOfUnreadMessagesCount as in previous example)
-      }
-    });
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -100,19 +97,9 @@ function App() {
   };
 
   return (
-    <>
+    <ChatProvider>
       <Routes>
-        <Route
-          path="/home"
-          element={
-            <Home
-              token={token}
-              currentChatMessages={currentChatMessages}
-              selectedChatId={selectedChatId}
-              setSelectedChatId={setSelectedChatId}
-            />
-          }
-        />
+        <Route path="/home" element={<Home token={token} />} />
         <Route
           index
           element={
@@ -123,7 +110,7 @@ function App() {
           }
         />
       </Routes>
-    </>
+    </ChatProvider>
   );
 }
 
