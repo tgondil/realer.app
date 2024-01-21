@@ -126,7 +126,7 @@ func SendMessageWithFile(w http.ResponseWriter, r *http.Request) (e error, statu
 	}*/
 	redisM := common_models.MessageDBModel{
 		MessageID:    0,
-		Timestamp:    nowTime.UnixMilli(),
+		Timestamp:    nowTime.Format(time.DateTime),
 		MessageAudio: fileNameString,
 		Reaction:     "",
 	}

@@ -12,7 +12,7 @@ func NewSendMessageRequestModel() *SendMessageRequestModel {
 
 type MessageDBModel struct {
 	MessageID    int64  `redis:"messageID"`
-	Timestamp    int64  `redis:"timestamp"`
+	Timestamp    string `redis:"timestamp"`
 	MessageAudio string `redis:"audioString"`
 	Reaction     string `redis:"reaction"`
 }
